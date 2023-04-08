@@ -38,10 +38,7 @@ export default function SignupPage(props: PageProps) {
 					)}
 					<AuthForm type="Signup" />
 					<hr class="my-4" />
-					<OAuthLoginButton provider="github">
-						<GitHub class="inline mr-2 h-5 w-5 align-text-top" /> Login with
-						GitHub
-					</OAuthLoginButton>
+
 					<div class="text-center text-gray-500 hover:text-black mt-8">
 						<a href="/login">Already have an account? Log in</a>
 					</div>
