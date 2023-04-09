@@ -59,7 +59,7 @@ export default function DashboardLayout(props: DashboardProps) {
 	const sidebarNavItems = [
 		{
 			icon: IconListDetails,
-			href: '/dashboard/pacient',
+			href: '/dashboard/patients',
 			inner: 'Pacientes',
 		},
 		{
