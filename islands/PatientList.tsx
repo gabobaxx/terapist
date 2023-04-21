@@ -53,7 +53,15 @@ export default function PatientList(props: PatientListProps) {
 				{patients.value.map((client) => (
 					<li class="flex items-center justify-between gap-2 p-2">
 						<div class="flex-1">{client.email}</div>
-						<IconTrash class="cursor-pointer text-red-600" />
+						{props.isAdmin ? (
+							client.is_invited ? (
+								<a href="#">Invitado</a>
+							) : (
+								<a href="#">Invitar</a>
+							)
+						) : (
+							<IconTrash class="cursor-pointer text-red-600" />
+						)}
 					</li>
 				))}
 			</ul>

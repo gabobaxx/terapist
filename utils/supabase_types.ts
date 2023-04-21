@@ -30,18 +30,21 @@ export interface Database {
 				Row: {
 					id: string;
 					customer_id: string;
+					is_invited: boolean;
 					email: string | null;
 					created_at: string | null;
 				};
 				Insert: {
 					id: string;
 					customer_id: string;
+					is_invited: boolean;
 					email: string | null;
 					created_at: string | null;
 				};
 				Update: {
 					id?: string;
 					customer_id?: string;
+					is_invited?: boolean;
 					email?: string | null;
 					created_at?: string | null;
 				};
