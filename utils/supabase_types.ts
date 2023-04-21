@@ -26,6 +26,26 @@ export interface Database {
 					user_id?: string;
 				};
 			};
+			clients: {
+				Row: {
+					id: string;
+					customer_id: string;
+					email: string | null;
+					created_at: string | null;
+				};
+				Insert: {
+					id: string;
+					customer_id: string;
+					email: string | null;
+					created_at: string | null;
+				};
+				Update: {
+					id?: string;
+					customer_id?: string;
+					email?: string | null;
+					created_at?: string | null;
+				};
+			};
 			todos: {
 				Row: {
 					id: string;
