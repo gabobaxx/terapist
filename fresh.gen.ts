@@ -25,13 +25,10 @@ import * as $18 from "./routes/dashboard/todos.tsx";
 import * as $19 from "./routes/dashboard/upgrade-subscription.ts";
 import * as $20 from "./routes/dashboard/vaccines.tsx";
 import * as $21 from "./routes/index.tsx";
-import * as $22 from "./routes/invite-link.tsx";
-import * as $23 from "./routes/login/index.tsx";
-import * as $24 from "./routes/login/success.tsx";
-import * as $25 from "./routes/logout.ts";
-import * as $26 from "./routes/set-password.tsx";
-import * as $27 from "./routes/signup.tsx";
-import * as $28 from "./routes/verify.tsx";
+import * as $22 from "./routes/login/index.tsx";
+import * as $23 from "./routes/login/success.tsx";
+import * as $24 from "./routes/logout.ts";
+import * as $25 from "./routes/signup.tsx";
 import * as $$0 from "./islands/AuthFragmentCatcher.tsx";
 import * as $$1 from "./islands/PatientList.tsx";
 import * as $$2 from "./islands/TodoList.tsx";
@@ -61,13 +58,10 @@ const manifest = {
     "./routes/dashboard/upgrade-subscription.ts": $19,
     "./routes/dashboard/vaccines.tsx": $20,
     "./routes/index.tsx": $21,
-    "./routes/invite-link.tsx": $22,
-    "./routes/login/index.tsx": $23,
-    "./routes/login/success.tsx": $24,
-    "./routes/logout.ts": $25,
-    "./routes/set-password.tsx": $26,
-    "./routes/signup.tsx": $27,
-    "./routes/verify.tsx": $28,
+    "./routes/login/index.tsx": $22,
+    "./routes/login/success.tsx": $23,
+    "./routes/logout.ts": $24,
+    "./routes/signup.tsx": $25,
   },
   islands: {
     "./islands/AuthFragmentCatcher.tsx": $$0,

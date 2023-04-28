@@ -1,4 +1,3 @@
-// Copyright 2023 the Deno authors. All rights reserved. MIT license.
 import type { Handlers } from '$fresh/server.ts';
 import { createSupabaseClient } from '@/utils/supabase.ts';
 import { assert } from 'std/testing/asserts.ts';
@@ -8,21 +7,24 @@ export const handler: Handlers = {
 	async POST(request) {
 		const form = await request.formData();
 		const email = form.get('email');
-		const password = form.get('password');
 		assert(typeof email === 'string');
-		assert(typeof password === 'string');
+
+		/**
+		 * ? Enable this if you want support
+		 * ? for AuthFormWithPassword component
+		 * 	const password = form.get('password');
+		 * 	assert(typeof password === 'string');
+		 * * If yes, remember make validations
+		 * * (if password exists or not)
+		 */
 
 		const headers = new Headers();
 
-		const { error, data } = await createSupabaseClient(
+		const { error } = await createSupabaseClient(
 			request.headers,
 			headers
-		).auth.signInWithPassword({
-			email,
-			password,
-		});
+		).auth.signInWithOtp({ email });
 
-		console.log(data.session);
 		let redirectUrl =
 			new URL(request.url).searchParams.get('redirect_url') ??
 			AUTHENTICATED_REDIRECT_PATH;
@@ -32,7 +34,6 @@ export const handler: Handlers = {
 
 		headers.set('location', redirectUrl);
 		const res = new Response(null, { headers, status: 302 });
-
 		return res;
 	},
 };
