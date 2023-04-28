@@ -4,7 +4,6 @@ import { getCustomer, createSupabaseClient } from '@/utils/supabase.ts';
 import { assert } from 'std/testing/asserts.ts';
 import type { Session, SupabaseClient } from '@supabase/supabase-js';
 import { Database } from '@/utils/supabase_types.ts';
-import { stripe } from '@/utils/stripe.ts';
 
 export interface DashboardState {
 	session: Session;
@@ -29,14 +28,10 @@ export async function handler(
 		});
 		const headers = new Headers();
 		const supabaseClient = createSupabaseClient(request.headers, headers);
-		// console.log({
-		// 	clientInMiddleware: supabaseClient,
-		// 	headersInMiddleware: headers,
-		// });
+
 		const {
 			data: { session },
 		} = await supabaseClient.auth.getSession();
-		// console.log({ sessionInMiddleware: session });
 		assert(session);
 
 		ctx.state.session = session;
@@ -45,11 +40,9 @@ export async function handler(
 
 		const response = await ctx.next();
 		headers.forEach((value, key) => response.headers.set(key, value));
-		console.log({ response });
-		return response;
-	} catch (error) {
-		// console.error({ error });
 
+		return response;
+	} catch (_error) {
 		return new Response(null, {
 			status: 302,
 			headers: {

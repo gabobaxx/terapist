@@ -1,13 +1,14 @@
 {
-  "lock": false,
-  "tasks": {
-    "start": "deno run -A --watch=static/,routes/ dev.ts",
-    "test": "deno test -A",
-    "check:license": "deno run --allow-read tools/check_license.ts"
-  },
-  "importMap": "./import_map.json",
-  "compilerOptions": {
-    "jsx": "react-jsx",
-    "jsxImportSource": "preact"
-  }
+	"lock": false,
+	"tasks": {
+		"start": "deno run -A --watch=static/,routes/ dev.ts",
+		"test": "deno test -A",
+		"check:license": "deno run --allow-read tools/check_license.ts",
+		"push": "deno lint && deno task test && git push origin main"
+	},
+	"importMap": "./import_map.json",
+	"compilerOptions": {
+		"jsx": "react-jsx",
+		"jsxImportSource": "preact"
+	}
 }
