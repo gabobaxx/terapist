@@ -12,12 +12,12 @@ import PatientList from '@/islands/PatientList.tsx';
 
 interface PatientsPageData extends DashboardState {
 	clients: Database['public']['Tables']['clients']['Update'][];
-	customer: Database['public']['Tables']['customers']['Row'];
+	customer: Database['public']['Tables']['customers']['Update'] | null;
 }
 
 export const handler: Handlers<PatientsPageData, DashboardState> = {
 	async GET(_request, ctx) {
-		const customer = await ctx.state.createOrGetCustomer();
+		const customer = await ctx.state.getCustomer();
 		const clients = await getClients(ctx.state.supabaseClient);
 		return ctx.render({
 			...ctx.state,

@@ -13,12 +13,12 @@ import TodoList from '@/islands/TodoList.tsx';
 
 interface TodosPageData extends DashboardState {
 	todos: Database['public']['Tables']['todos']['Insert'][];
-	customer: Database['public']['Tables']['customers']['Row'];
+	customer: Database['public']['Tables']['customers']['Update'] | null;
 }
 
 export const handler: Handlers<TodosPageData, DashboardState> = {
 	async GET(_request, ctx) {
-		const customer = await ctx.state.createOrGetCustomer();
+		const customer = await ctx.state.getCustomer();
 		const todos = await getTodos(ctx.state.supabaseClient);
 		return ctx.render({
 			...ctx.state,
@@ -35,7 +35,7 @@ export default function TodosPage(props: PageProps<TodosPageData>) {
 			<Dashboard active="/dashboard/solicitude">
 				<Notice class="mb-4">Vacunas solicitadas por el momento</Notice>
 				<TodoList
-					isSubscribed={props.data.customer.is_subscribed!}
+					isSubscribed={props.data.customer?.is_subscribed!}
 					todos={props.data.todos}
 				/>
 			</Dashboard>

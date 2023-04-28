@@ -13,12 +13,12 @@ import VaccineList from '@/islands/VaccinesList.tsx';
 
 interface TodosPageData extends DashboardState {
 	vaccines: Database['public']['Tables']['vaccines']['Insert'][];
-	customer: Database['public']['Tables']['customers']['Row'];
+	customer: Database['public']['Tables']['customers']['Update'] | null;
 }
 
 export const handler: Handlers<TodosPageData, DashboardState> = {
 	async GET(_request, ctx) {
-		const customer = await ctx.state.createOrGetCustomer();
+		const customer = await ctx.state.getCustomer();
 		const vaccines = await getVaccines(ctx.state.supabaseClient);
 		return ctx.render({
 			...ctx.state,
