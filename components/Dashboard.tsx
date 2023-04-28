@@ -1,4 +1,3 @@
-// Copyright 2023 the Deno authors. All rights reserved. MIT license.
 import { type ComponentChild, JSX } from 'preact';
 import IconListDetails from 'tabler-icons/list-details.tsx';
 import IconUser from 'tabler-icons/user.tsx';
@@ -72,11 +71,11 @@ export default function DashboardLayout(props: DashboardProps) {
 			href: '/dashboard/solicitude',
 			inner: 'Vacunas Solicitadas',
 		},
-		{
-			icon: IconListDetails,
-			href: '/dashboard/todos',
-			inner: 'Tareas',
-		},
+		// {
+		// 	icon: IconListDetails,
+		// 	href: '/dashboard/todos',
+		// 	inner: 'Tareas',
+		// },
 		{
 			icon: IconUser,
 			href: '/dashboard/account',
@@ -112,9 +111,7 @@ export default function DashboardLayout(props: DashboardProps) {
 				<SidebarNav {...props} items={sidebarNavItems} />
 				<div class="flex-1">{props.children}</div>
 			</div>
-			<Footer>
-				<Nav items={footerNavItems} />
-			</Footer>
+			<Footer />
 		</div>
 	);
 }

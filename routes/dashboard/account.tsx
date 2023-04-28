@@ -1,24 +1,24 @@
-// Copyright 2023 the Deno authors. All rights reserved. MIT license.
-import type { Handlers, PageProps } from '$fresh/server.ts';
+// * Components
 import Head from '@/components/Head.tsx';
-import type { DashboardState } from './_middleware.ts';
 import Dashboard from '@/components/Dashboard.tsx';
-import type { Database } from '@/utils/supabase_types.ts';
+// * Types
+import type { Handlers, PageProps } from '$fresh/server.ts';
+import type { DashboardState } from './_middleware.ts';
 
-interface AccountPageData extends DashboardState {
-	customer: Database['public']['Tables']['customers']['Row'];
-}
-
-export const handler: Handlers<AccountPageData, DashboardState> = {
-	async GET(_request, ctx) {
-		const customer = await ctx.state.createOrGetCustomer();
-		return ctx.render({ ...ctx.state, customer });
+export const handler: Handlers<DashboardState> = {
+	GET(_request, ctx) {
+		const data = {
+			session: ctx.state.session as DashboardState['session'],
+			supabaseClient: ctx.state
+				.supabaseClient as DashboardState['supabaseClient'],
+			createOrGetCustomer: ctx.state
+				.createOrGetCustomer as DashboardState['createOrGetCustomer'],
+		};
+		return ctx.render(data);
 	},
 };
 
-export default function AccountPage(props: PageProps<AccountPageData>) {
-	const action = props.data.customer.is_subscribed ? 'Manage' : 'Upgrade';
-
+export default function AccountPage(props: PageProps<DashboardState>) {
 	return (
 		<>
 			<Head title="Account" />
@@ -29,17 +29,6 @@ export default function AccountPage(props: PageProps<AccountPageData>) {
 							<strong>Email</strong>
 						</div>
 						<div>{props.data.session.user.email}</div>
-					</li>
-					<li class="flex items-center justify-between gap-2 py-2">
-						<div class="flex-1">
-							<strong>Subscription</strong>
-						</div>
-						<a
-							class="underline"
-							href={`/dashboard/${action.toLowerCase()}-subscription`}
-						>
-							{action} subscription
-						</a>
 					</li>
 				</ul>
 			</Dashboard>

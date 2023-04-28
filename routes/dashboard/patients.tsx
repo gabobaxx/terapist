@@ -1,11 +1,14 @@
+// * Types
 import type { Handlers, PageProps } from '$fresh/server.ts';
-import { getClients } from '@/utils/clients.ts';
-import Head from '@/components/Head.tsx';
-import PatientList from '@/islands/PatientList.tsx';
-import Notice from '@/components/Notice.tsx';
 import { DashboardState } from './_middleware.ts';
+// * Components
+import Head from '@/components/Head.tsx';
 import Dashboard from '@/components/Dashboard.tsx';
+// * Utils
+import { getClients } from '@/utils/clients.ts';
 import { Database } from '@/utils/supabase_types.ts';
+// * Islands
+import PatientList from '@/islands/PatientList.tsx';
 
 interface PatientsPageData extends DashboardState {
 	clients: Database['public']['Tables']['clients']['Update'][];
@@ -29,18 +32,8 @@ export default function PatientsPage(props: PageProps<PatientsPageData>) {
 		<>
 			<Head title="Patients" />
 			<Dashboard active="/dashboard/patients">
-				{!props.data.customer.is_subscribed && (
-					<Notice class="mb-4">
-						You are on a free subscription. Please{' '}
-						<a href="/dashboard/upgrade-subscription" class="underline">
-							upgrade
-						</a>{' '}
-						to enable unlimited todos
-					</Notice>
-				)}
-				{/* Change to PatientList */}
 				<PatientList
-					isSubscribed={props.data.customer.is_subscribed!}
+					isSubscribed={true}
 					patients={props.data.clients}
 					isAdmin={Boolean(props.data.customer)}
 				/>

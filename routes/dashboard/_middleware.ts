@@ -36,9 +36,6 @@ export async function handler(
 		ctx.state.supabaseClient = supabaseClient;
 		ctx.state.createOrGetCustomer = async () =>
 			await createOrGetCustomer(supabaseClient, stripe);
-		// ctx.state.session.user.admin = Boolean(
-		// 	await ctx.state.createOrGetCustomer()
-		// );
 
 		const response = await ctx.next();
 		/**

@@ -1,11 +1,15 @@
-import type { Handlers, PageProps } from '$fresh/server.ts';
-import { getVaccines } from '@/utils/vaccines.ts';
-import Head from '@/components/Head.tsx';
-import VaccineList from '@/islands/VaccinesList.tsx';
-import Notice from '@/components/Notice.tsx';
+// * Types
 import { DashboardState } from './_middleware.ts';
-import Dashboard from '@/components/Dashboard.tsx';
 import { Database } from '@/utils/supabase_types.ts';
+import type { Handlers, PageProps } from '$fresh/server.ts';
+// * Components
+import Head from '@/components/Head.tsx';
+import Notice from '../../components/Notice.tsx';
+import Dashboard from '@/components/Dashboard.tsx';
+// * Utils
+import { getVaccines } from '@/utils/vaccines.ts';
+// * Islands
+import VaccineList from '@/islands/VaccinesList.tsx';
 
 interface TodosPageData extends DashboardState {
 	vaccines: Database['public']['Tables']['vaccines']['Insert'][];
@@ -29,19 +33,8 @@ export default function VaccinesPage(props: PageProps<TodosPageData>) {
 		<>
 			<Head title="Vacunas Disponible " />
 			<Dashboard active="/dashboard/vaccines">
-				{!props.data.customer.is_subscribed && (
-					<Notice class="mb-4">
-						You are on a free subscription. Please{' '}
-						<a href="/dashboard/upgrade-subscription" class="underline">
-							upgrade
-						</a>{' '}
-						to enable unlimited todos
-					</Notice>
-				)}
-				<VaccineList
-					isSubscribed={props.data.customer.is_subscribed!}
-					vaccines={props.data.vaccines}
-				/>
+				<Notice class="mb-4">Vacunas disponibles por el momento</Notice>
+				<VaccineList isSubscribed={true} vaccines={props.data.vaccines} />
 			</Dashboard>
 		</>
 	);

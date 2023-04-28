@@ -1,11 +1,15 @@
-import type { Handlers, PageProps } from '$fresh/server.ts';
-import { getTodos } from '@/utils/todos.ts';
-import Head from '@/components/Head.tsx';
-import TodoList from '@/islands/TodoList.tsx';
-import Notice from '@/components/Notice.tsx';
+// * Types
 import { DashboardState } from './_middleware.ts';
-import Dashboard from '@/components/Dashboard.tsx';
 import { Database } from '@/utils/supabase_types.ts';
+import type { Handlers, PageProps } from '$fresh/server.ts';
+// * Components
+import Head from '@/components/Head.tsx';
+import Notice from '../../components/Notice.tsx';
+import Dashboard from '@/components/Dashboard.tsx';
+// * Utils
+import { getTodos } from '@/utils/todos.ts';
+// * Islands
+import TodoList from '@/islands/TodoList.tsx';
 
 interface TodosPageData extends DashboardState {
 	todos: Database['public']['Tables']['todos']['Insert'][];
@@ -27,17 +31,9 @@ export const handler: Handlers<TodosPageData, DashboardState> = {
 export default function TodosPage(props: PageProps<TodosPageData>) {
 	return (
 		<>
-			<Head title="Todos" />
+			<Head title="Vacunas Solicitadas" />
 			<Dashboard active="/dashboard/solicitude">
-				{!props.data.customer.is_subscribed && (
-					<Notice class="mb-4">
-						You are on a free subscription. Please{' '}
-						<a href="/dashboard/upgrade-subscription" class="underline">
-							upgrade
-						</a>{' '}
-						to enable unlimited todos
-					</Notice>
-				)}
+				<Notice class="mb-4">Vacunas solicitadas por el momento</Notice>
 				<TodoList
 					isSubscribed={props.data.customer.is_subscribed!}
 					todos={props.data.todos}
