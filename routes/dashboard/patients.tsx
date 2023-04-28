@@ -9,12 +9,12 @@ import { Database } from '@/utils/supabase_types.ts';
 
 interface PatientsPageData extends DashboardState {
 	clients: Database['public']['Tables']['clients']['Update'][];
-	customer: Database['public']['Tables']['customers']['Row'];
+	customer: Database['public']['Tables']['customers']['Update'] | null;
 }
 
 export const handler: Handlers<PatientsPageData, DashboardState> = {
 	async GET(_request, ctx) {
-		const customer = await ctx.state.createOrGetCustomer();
+		const customer = await ctx.state.getCustomer();
 		const clients = await getClients(ctx.state.supabaseClient);
 		return ctx.render({
 			...ctx.state,
@@ -29,7 +29,7 @@ export default function PatientsPage(props: PageProps<PatientsPageData>) {
 		<>
 			<Head title="Patients" />
 			<Dashboard active="/dashboard/patients">
-				{!props.data.customer.is_subscribed && (
+				{!props.data.customer?.is_subscribed && (
 					<Notice class="mb-4">
 						You are on a free subscription. Please{' '}
 						<a href="/dashboard/upgrade-subscription" class="underline">
@@ -40,7 +40,7 @@ export default function PatientsPage(props: PageProps<PatientsPageData>) {
 				)}
 				{/* Change to PatientList */}
 				<PatientList
-					isSubscribed={props.data.customer.is_subscribed!}
+					isSubscribed={props.data.customer?.is_subscribed!}
 					patients={props.data.clients}
 					isAdmin={Boolean(props.data.customer)}
 				/>

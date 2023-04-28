@@ -1,12 +1,12 @@
-import type { Handlers } from "$fresh/server.ts";
+import type { Handlers } from '$fresh/server.ts';
 
 export const handler: Handlers = {
-  GET() {
-    return new Response(null, {
-      status: 302,
-      headers: {
-        location: "/dashboard/todos",
-      },
-    });
-  },
+	GET() {
+		return new Response(null, {
+			status: 302,
+			headers: {
+				location: '/dashboard/account',
+			},
+		});
+	},
 };

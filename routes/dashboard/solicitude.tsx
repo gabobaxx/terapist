@@ -9,12 +9,12 @@ import { Database } from '@/utils/supabase_types.ts';
 
 interface TodosPageData extends DashboardState {
 	todos: Database['public']['Tables']['todos']['Insert'][];
-	customer: Database['public']['Tables']['customers']['Row'];
+	customer: Database['public']['Tables']['customers']['Update'] | null;
 }
 
 export const handler: Handlers<TodosPageData, DashboardState> = {
 	async GET(_request, ctx) {
-		const customer = await ctx.state.createOrGetCustomer();
+		const customer = await ctx.state.getCustomer();
 		const todos = await getTodos(ctx.state.supabaseClient);
 		return ctx.render({
 			...ctx.state,
@@ -29,7 +29,7 @@ export default function TodosPage(props: PageProps<TodosPageData>) {
 		<>
 			<Head title="Todos" />
 			<Dashboard active="/dashboard/solicitude">
-				{!props.data.customer.is_subscribed && (
+				{!props.data.customer?.is_subscribed && (
 					<Notice class="mb-4">
 						You are on a free subscription. Please{' '}
 						<a href="/dashboard/upgrade-subscription" class="underline">
@@ -39,7 +39,7 @@ export default function TodosPage(props: PageProps<TodosPageData>) {
 					</Notice>
 				)}
 				<TodoList
-					isSubscribed={props.data.customer.is_subscribed!}
+					isSubscribed={props.data.customer?.is_subscribed!}
 					todos={props.data.todos}
 				/>
 			</Dashboard>
