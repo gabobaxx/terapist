@@ -68,14 +68,9 @@ export default function DashboardLayout(props: DashboardProps) {
 		},
 		{
 			icon: IconListDetails,
-			href: '/dashboard/solicitude',
+			href: '/dashboard/solicitudes',
 			inner: 'Vacunas Solicitadas',
 		},
-		// {
-		// 	icon: IconListDetails,
-		// 	href: '/dashboard/todos',
-		// 	inner: 'Tareas',
-		// },
 		{
 			icon: IconUser,
 			href: '/dashboard/account',

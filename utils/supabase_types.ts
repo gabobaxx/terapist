@@ -66,6 +66,29 @@ export interface Database {
 					user_id?: string;
 				};
 			};
+			solicitudes: {
+				Row: {
+					id: string;
+					vaccine_id: string;
+					client_id: string; // client of the customer
+					customer_id: string;
+					date: Date; // fecha de la cita
+				};
+				Insert: {
+					id: string;
+					vaccine_id: string;
+					client_id: string; // client of the customer
+					customer_id: string;
+					date: Date; // fecha de la cita
+				};
+				Update: {
+					id?: string;
+					vaccine_id?: string;
+					client_id?: string; // client of the customer
+					customer_id?: string;
+					date?: Date; // fecha de la cita
+				};
+			};
 			vaccines: {
 				Row: {
 					id: string;

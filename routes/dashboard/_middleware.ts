@@ -23,9 +23,6 @@ export async function handler(
 	ctx: MiddlewareHandlerContext<DashboardState>
 ) {
 	try {
-		console.log({
-			requestHeaders: request.headers,
-		});
 		const headers = new Headers();
 		const supabaseClient = createSupabaseClient(request.headers, headers);
 
