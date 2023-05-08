@@ -9,7 +9,7 @@ export default function AuthForm({ type }: AuthFormProps) {
 	return (
 		<form method="POST" class="space-y-4" action={`/api/${type.toLowerCase()}`}>
 			<Input
-				placeholder="Email"
+				placeholder="email@gmail.com"
 				name="email"
 				type="email"
 				required

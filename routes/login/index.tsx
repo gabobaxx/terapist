@@ -31,14 +31,21 @@ export default function LoginPage(props: PageProps) {
 					<a href="/">
 						<Logo class="mb-8" />
 					</a>
-					{errorMessage === 'Invalid login credentials' && (
-						<Notice>{errorMessage}</Notice>
+					{errorMessage === 'Signups not allowed for otp' && (
+						<div>
+							<Notice>
+								Usuario no encontrado,{' '}
+								<a href="/signup" class="text-gray-500 hover:text-black">
+									crea una cuenta
+								</a>
+							</Notice>
+						</div>
 					)}
 					<AuthForm type="Login" />
 					<hr class="my-4" />
 
 					<div class="text-center text-gray-500 hover:text-black mt-8">
-						<a href="/signup">Don't have an account? Sign up</a>
+						<a href="/signup">No tienes una cuenta? Crear una</a>
 					</div>
 				</div>
 			</div>

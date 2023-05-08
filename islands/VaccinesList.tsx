@@ -53,12 +53,6 @@ async function deleteVaccine(vaccines: Signal<Vaccine[]>, id: string) {
 	deleteVaccineInSignal(vaccines, id);
 }
 
-interface VaccinesListProps {
-	vaccines: Vaccine[];
-	solicitudes: Solicitude[];
-	customer: Database['public']['Tables']['customers']['Update'] | null;
-}
-
 async function requestVaccination(solicitude: Solicitude) {
 	const response = await fetch('/dashboard/api/solicitude', {
 		method: 'POST',
@@ -89,6 +83,13 @@ async function addVaccination(
 	vaccinationInSignal(solicitudes, newSolicitude);
 }
 
+interface VaccinesListProps {
+	vaccines: Vaccine[];
+	solicitudes: Solicitude[];
+	customer: Database['public']['Tables']['customers']['Update'] | null;
+	clients?: Database['public']['Tables']['clients']['Row'][];
+}
+
 export default function VaccinesList(props: VaccinesListProps) {
 	const vaccines = useSignal(props.vaccines);
 	const solicitudes = useSignal(props.solicitudes);
@@ -99,6 +100,8 @@ export default function VaccinesList(props: VaccinesListProps) {
 
 	// const isMoreTodos =
 	// 	props.isSubscribed || vaccines.value.length < FREE_PLAN_TODOS_LIMIT;
+
+	const isCustomer = Boolean(props.customer);
 
 	return (
 		<div class="space-y-4">
@@ -120,36 +123,38 @@ export default function VaccinesList(props: VaccinesListProps) {
 					</li>
 				))}
 			</ul>
-			<form
-				class="flex gap-4"
-				onSubmit={async (event) => {
-					event.preventDefault();
+			{isCustomer && (
+				<form
+					class="flex gap-4"
+					onSubmit={async (event) => {
+						event.preventDefault();
 
-					await addVaccine(
-						vaccines,
-						newVaccineNameRef.current!.value,
-						parseInt(newVaccineQuantityRef.current!.value)
-					);
-					newVaccineNameRef.current!.form!.reset();
-				}}
-			>
-				<Input
-					ref={newVaccineNameRef}
-					// disabled={!isMoreTodos}
-					class="flex-1"
-					required
-				/>
-				<Input
-					ref={newVaccineQuantityRef}
-					// disabled={!isMoreTodos}
-					class="flex-2"
-					required
-					type="number"
-				/>
-				<Button /*disabled={!isMoreTodos}*/ type="submit" class="px-4">
-					+
-				</Button>
-			</form>
+						await addVaccine(
+							vaccines,
+							newVaccineNameRef.current!.value,
+							parseInt(newVaccineQuantityRef.current!.value)
+						);
+						newVaccineNameRef.current!.form!.reset();
+					}}
+				>
+					<Input
+						ref={newVaccineNameRef}
+						// disabled={!isMoreTodos}
+						class="flex-1"
+						required
+					/>
+					<Input
+						ref={newVaccineQuantityRef}
+						// disabled={!isMoreTodos}
+						class="flex-2"
+						required
+						type="number"
+					/>
+					<Button /*disabled={!isMoreTodos}*/ type="submit" class="px-4">
+						+
+					</Button>
+				</form>
+			)}
 		</div>
 	);
 }

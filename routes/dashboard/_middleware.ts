@@ -1,6 +1,11 @@
 // Copyright 2023 the Deno authors. All rights reserved. MIT license.
 import { MiddlewareHandlerContext } from '$fresh/server.ts';
-import { getCustomer, createSupabaseClient } from '@/utils/supabase.ts';
+import {
+	supabaseAdminClient,
+	getCustomer,
+	createSupabaseClient,
+	getClient,
+} from '@/utils/supabase.ts';
 import { assert } from 'std/testing/asserts.ts';
 import type { Session, SupabaseClient } from '@supabase/supabase-js';
 import { Database } from '@/utils/supabase_types.ts';
@@ -10,6 +15,9 @@ export interface DashboardState {
 	supabaseClient: SupabaseClient<Database>;
 	getCustomer: () => Promise<
 		Database['public']['Tables']['customers']['Update'] | null
+	>;
+	getClient: () => Promise<
+		Database['public']['Tables']['clients']['Insert'] | null
 	>;
 }
 
@@ -33,6 +41,7 @@ export async function handler(
 
 		ctx.state.session = session;
 		ctx.state.supabaseClient = supabaseClient;
+		ctx.state.getClient = async () => await getClient(supabaseAdminClient);
 		ctx.state.getCustomer = async () => await getCustomer(supabaseClient);
 
 		const response = await ctx.next();

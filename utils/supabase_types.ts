@@ -28,21 +28,21 @@ export interface Database {
 			};
 			clients: {
 				Row: {
-					id: string;
+					user_id: string;
+					email: string | null;
 					customer_id: string;
 					is_invited: boolean;
-					email: string | null;
-					created_at: string | null;
+					created_at?: string | null;
 				};
 				Insert: {
-					id: string;
+					user_id: string;
 					customer_id: string;
 					is_invited: boolean;
 					email: string | null;
 					created_at: string | null;
 				};
 				Update: {
-					id?: string;
+					user_id?: string;
 					customer_id?: string;
 					is_invited?: boolean;
 					email?: string | null;
@@ -94,19 +94,19 @@ export interface Database {
 					id: string;
 					name: string | null;
 					quantity: number;
-					user_id: string;
+					customer_id: string;
 				};
 				Insert: {
 					id: string;
 					name?: string | null;
 					quantity?: number;
-					user_id?: string;
+					customer_id?: string;
 				};
 				Update: {
 					id?: string;
 					name?: string | null;
 					quantity?: number;
-					user_id?: string;
+					customer_id?: string;
 				};
 			};
 		};

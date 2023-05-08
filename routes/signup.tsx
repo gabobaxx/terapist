@@ -1,10 +1,7 @@
-// Copyright 2023 the Deno authors. All rights reserved. MIT license.
 import Head from '@/components/Head.tsx';
-import AuthForm from '@/components/AuthForm.tsx';
+import AuthForm from '@/components/AuthFormWithPassword.tsx';
 import Notice from '@/components/Notice.tsx';
 import Logo from '@/components/Logo.tsx';
-import OAuthLoginButton from '@/components/OAuthLoginButton.tsx';
-import { GitHub } from '@/components/Icons.tsx';
 
 import type { Handlers, PageProps } from '$fresh/server.ts';
 

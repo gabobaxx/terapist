@@ -8,7 +8,7 @@ export type Client = Database['public']['Tables']['clients']['Insert'];
 export async function getClients(client: SupabaseClient<Database>) {
 	const { data } = await client
 		.from(TABLE_NAME)
-		.select('id, email, customer_id, is_invited')
+		.select('user_id, email, customer_id, is_invited')
 		.throwOnError();
 	return data!;
 }

@@ -23,7 +23,12 @@ export const handler: Handlers = {
 		const { error } = await createSupabaseClient(
 			request.headers,
 			headers
-		).auth.signInWithOtp({ email });
+		).auth.signInWithOtp({
+			email,
+			options: {
+				shouldCreateUser: false,
+			},
+		});
 
 		let redirectUrl =
 			new URL(request.url).searchParams.get('redirect_url') ??

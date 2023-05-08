@@ -41,6 +41,10 @@ export async function getCustomer(supabaseClient: SupabaseClient<Database>) {
 	const { data } = await supabaseClient.from('customers').select().single();
 	return data;
 }
+export async function getClient(supabaseClient: SupabaseClient<Database>) {
+	const { data } = await supabaseClient.from('clients').select().single();
+	return data;
+}
 
 export async function createCustomer(
 	supabaseClient: SupabaseClient<Database>,
