@@ -1,7 +1,7 @@
 import Head from '@/components/Head.tsx';
-import AuthForm from '@/components/AuthFormWithPassword.tsx';
-import Notice from '@/components/Notice.tsx';
 import Logo from '@/components/Logo.tsx';
+import Notice from '@/components/Notice.tsx';
+import AuthForm from '@/components/AuthFormWithPassword.tsx';
 
 import type { Handlers, PageProps } from '$fresh/server.ts';
 
@@ -37,7 +37,7 @@ export default function SignupPage(props: PageProps) {
 					<hr class="my-4" />
 
 					<div class="text-center text-gray-500 hover:text-black mt-8">
-						<a href="/login">Already have an account? Log in</a>
+						<a href="/login">Ya tienes una cuenta? Ingresa</a>
 					</div>
 				</div>
 			</div>
