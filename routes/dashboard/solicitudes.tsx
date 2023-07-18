@@ -10,6 +10,7 @@ import SolicitudesList from '@/components/SolicitudesList.tsx';
 // * Utils
 import { getSolicitudes } from '@/utils/solicitudes.ts';
 import { getVaccines } from '@/utils/vaccines.ts';
+import { supabaseAdminClient } from '@/utils/supabase.ts';
 
 export interface SolicitudesPageData extends DashboardState {
 	solicitudes: {
@@ -25,17 +26,22 @@ export const handler: Handlers<SolicitudesPageData, DashboardState> = {
 		// ! fix typescript and network typing
 		const solicitudes = await getSolicitudes(ctx.state.supabaseClient);
 		const vaccines = await getVaccines(ctx.state.supabaseClient);
+		const { data, error } = await supabaseAdminClient.auth.admin.listUsers();
 
 		// * convert string to date type/format
 		const newSolicitudes = solicitudes.map((solicitude) => {
 			const vaccine = vaccines.find(
 				(vaccine) => vaccine.id === solicitude.vaccine_id
 			);
+
+			const user = data.users.find((user) => user.id === solicitude.client_id);
+
 			solicitude.date = new Date(solicitude.date);
 			return {
 				id: solicitude.id,
 				vaccine: vaccine?.name,
 				date: solicitude.date,
+				user,
 			};
 		});
 

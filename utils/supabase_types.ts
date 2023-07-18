@@ -71,21 +71,21 @@ export interface Database {
 					id: string;
 					vaccine_id: string;
 					client_id: string; // client of the customer
-					customer_id: string;
+
 					date: Date; // fecha de la cita
 				};
 				Insert: {
 					id: string;
 					vaccine_id: string;
 					client_id: string; // client of the customer
-					customer_id: string;
+
 					date: Date; // fecha de la cita
 				};
 				Update: {
 					id?: string;
 					vaccine_id?: string;
 					client_id?: string; // client of the customer
-					customer_id?: string;
+
 					date?: Date; // fecha de la cita
 				};
 			};
@@ -107,6 +107,29 @@ export interface Database {
 					name?: string | null;
 					quantity?: number;
 					customer_id?: string;
+				};
+			};
+			kids: {
+				Row: {
+					id: string;
+					name: string;
+					lastname: string;
+					age: number;
+					client_id: string;
+				};
+				Insert: {
+					id?: string;
+					name?: string;
+					lastname?: string;
+					age?: number;
+					client_id?: string;
+				};
+				Update: {
+					id?: string;
+					name?: string;
+					lastname?: string;
+					age?: number;
+					client_id?: string;
 				};
 			};
 		};

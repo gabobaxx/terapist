@@ -12,6 +12,50 @@ import Notice from '@/components/Notice.tsx';
 
 type Client = Database['public']['Tables']['clients']['Update'];
 
+type Kid = {
+	id?: string;
+	name?: string;
+	lastname?: string;
+	age?: number;
+	client_id?: string;
+};
+
+async function requestCreateKid(kid: Kid) {
+	const response = await fetch('/dashboard/api/kid', {
+		method: 'POST',
+		body: JSON.stringify(kid),
+	});
+	if (!response.ok) {
+		return await response.json();
+	}
+	assert(response.ok);
+}
+
+function createKidInSignal(kids: Signal<Kid[]>, kid: Kid) {
+	kids.value = [...kids.value, kid];
+}
+
+async function createKid(
+	kids: Signal<Kid[]>,
+	name: string,
+	lastname: string,
+	age: number,
+	client_id: string
+) {
+	const newKid: Kid = {
+		id: crypto.randomUUID(),
+		name,
+		lastname,
+		age,
+		client_id,
+	};
+	// console.log(newKid);
+	if (IS_BROWSER) {
+		const response = await requestCreateKid(newKid);
+	}
+	createKidInSignal(kids, newKid);
+}
+
 async function requestCreateClient(client: Client) {
 	const response = await fetch('/dashboard/api/client', {
 		method: 'POST',
@@ -86,64 +130,140 @@ interface clientListProps {
 	isAdmin: boolean;
 	isSubscribed: boolean;
 	patients: Client[];
+	client_id: string;
+	kids: Kid[];
 }
 
 export default function PatientsList(props: clientListProps) {
 	const [errorMessage, setError] = useState<string | null>(null);
 	const clients = useSignal(props.patients);
+	const kidsFromProps = useSignal(props.kids);
+	const kids = useSignal([]);
 	const newClientRef = useRef<HTMLInputElement | null>(null);
+
+	const kidNameRef = useRef<HTMLInputElement | null>(null);
+	const kidLastnameRef = useRef<HTMLInputElement | null>(null);
+	const kidAgeRef = useRef<HTMLInputElement | null>(null);
 
 	const isMoreTodos =
 		props.isSubscribed || clients.value.length < FREE_PLAN_TODOS_LIMIT;
 
+	const isMoreKids = kidsFromProps.value.length <= 0;
+
 	return (
 		<div class="space-y-4">
-			<ul class="divide-y space-y-2">
-				{clients.value.map((client) => (
-					<li class="flex items-center justify-between gap-2 p-2">
-						<div class="flex-1">{client.email}</div>
-						{props.isAdmin ? (
-							client.is_invited ? (
-								<p>Invitado</p>
-							) : (
-								<Button
-									class="px-4"
-									onClick={async () => {
-										await inviteClient(clients, client.email);
-									}}
-								>
-									Invitar
-								</Button>
-							)
-						) : (
-							<IconTrash class="cursor-pointer text-red-600" />
-						)}
-					</li>
-				))}
-			</ul>
-			{typeof errorMessage === 'string' && <Notice>{errorMessage}</Notice>}
-			<form
-				class="flex gap-4"
-				onSubmit={async (event) => {
-					event.preventDefault();
-					props.isAdmin
-						? await createClient(clients, newClientRef.current!.value, {
-								setError,
-						  })
-						: null; // createclient() -> coming soon!
-					newClientRef.current!.form!.reset();
-				}}
-			>
-				<Input
-					ref={newClientRef}
-					disabled={!isMoreTodos}
-					class="flex-1"
-					required
-				/>
-				<Button disabled={!isMoreTodos} type="submit" class="px-4">
-					+
-				</Button>
-			</form>
+			{props.isAdmin ? (
+				<>
+					<ul class="divide-y space-y-2">
+						{clients.value.map((client) => (
+							<li class="flex items-center justify-between gap-2 p-2">
+								<div class="flex-1">{client.email}</div>
+								{props.isAdmin ? (
+									client.is_invited ? (
+										<p>Invitado</p>
+									) : (
+										<Button
+											class="px-4"
+											onClick={async () => {
+												await inviteClient(clients, client.email);
+											}}
+										>
+											Invitar
+										</Button>
+									)
+								) : (
+									<IconTrash class="cursor-pointer text-red-600" />
+								)}
+							</li>
+						))}
+					</ul>
+					{typeof errorMessage === 'string' && <Notice>{errorMessage}</Notice>}
+					<form
+						class="flex gap-4"
+						onSubmit={async (event) => {
+							event.preventDefault();
+							props.isAdmin
+								? await createClient(clients, newClientRef.current!.value, {
+										setError,
+								  })
+								: null; // createclient() -> coming soon!
+							newClientRef.current!.form!.reset();
+						}}
+					>
+						<Input
+							ref={newClientRef}
+							disabled={!isMoreTodos}
+							class="flex-1"
+							required
+						/>
+						<Button disabled={!isMoreTodos} type="submit" class="px-4">
+							+
+						</Button>
+					</form>
+				</>
+			) : (
+				<>
+					<ul class="divide-y space-y-2">
+						<li class="flex items-center justify-between gap-2 p-2">
+							<div class="flex-1">Nombre</div>
+							<div class="flex-1">Apellido</div>
+							<div class="flex-1">Edad</div>
+						</li>
+						{kidsFromProps.value.map((kid) => (
+							<li class="flex items-center justify-between gap-2 p-2">
+								<div class="flex-1">{kid.name}</div>
+								<div class="flex-1">{kid.lastname}</div>
+								<div class="flex-1">{kid.age} Años</div>
+							</li>
+						))}
+					</ul>
+					{typeof errorMessage === 'string' && <Notice>{errorMessage}</Notice>}
+
+					<form
+						class="flex gap-4"
+						onSubmit={async (event) => {
+							event.preventDefault();
+							await createKid(
+								kids,
+								kidNameRef.current!.value,
+								kidLastnameRef.current!.value,
+								parseInt(kidAgeRef.current!.value),
+								props.client_id
+							);
+
+							kidNameRef.current!.form!.reset();
+							kidLastnameRef.current!.form!.reset();
+							kidAgeRef.current!.form!.reset();
+						}}
+					>
+						<Input
+							ref={kidNameRef}
+							disabled={!isMoreKids}
+							class="flex-1"
+							required
+							placeholder="Nombre"
+						/>
+						<Input
+							ref={kidLastnameRef}
+							disabled={!isMoreKids}
+							class="flex-1"
+							required
+							placeholder="Apellido"
+						/>
+						<Input
+							disabled={!isMoreKids}
+							ref={kidAgeRef}
+							class="flex-2"
+							required
+							placeholder="Edad"
+							type="number"
+						/>
+						<Button disabled={!isMoreKids} type="submit" class="px-4">
+							+
+						</Button>
+					</form>
+				</>
+			)}
 		</div>
 	);
 }

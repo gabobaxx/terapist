@@ -71,14 +71,15 @@ function vaccinationInSignal(
 async function addVaccination(
 	solicitudes: Signal<Solicitude[]>,
 	vaccineId: string,
-	customerId: string | undefined
+	clientId: string | undefined
 ) {
 	const newSolicitude: Solicitude = {
 		id: crypto.randomUUID(),
 		vaccine_id: vaccineId,
-		client_id: '',
-		customer_id: customerId || '',
+		client_id: clientId,
 	};
+
+	console.log(newSolicitude);
 	if (IS_BROWSER) await requestVaccination(newSolicitude);
 	vaccinationInSignal(solicitudes, newSolicitude);
 }
@@ -88,12 +89,13 @@ interface VaccinesListProps {
 	solicitudes: Solicitude[];
 	customer: Database['public']['Tables']['customers']['Update'] | null;
 	clients?: Database['public']['Tables']['clients']['Row'][];
+	clientId: string;
 }
 
 export default function VaccinesList(props: VaccinesListProps) {
 	const vaccines = useSignal(props.vaccines);
 	const solicitudes = useSignal(props.solicitudes);
-	const customerId = props.customer?.user_id;
+	const clientId = props.clientId;
 
 	const newVaccineNameRef = useRef<HTMLInputElement | null>(null);
 	const newVaccineQuantityRef = useRef<HTMLInputElement | null>(null);
@@ -106,20 +108,34 @@ export default function VaccinesList(props: VaccinesListProps) {
 	return (
 		<div class="space-y-4">
 			<ul class="divide-y space-y-2">
+				<li class="flex items-center justify-between gap-2 p-2">
+					<div class="flex-1">Nombre de Vacuna</div>
+					<div class="flex-1">Cantidad Disponible</div>
+					<div class="flex-1"></div>
+				</li>
 				{vaccines.value.map((vaccine) => (
 					<li class="flex items-center justify-between gap-2 p-2">
 						<div class="flex-1">{vaccine.name}</div>
 						<div class="flex-1">{vaccine.quantity}</div>
-						<IconTrash
+						<button
 							onClick={async () =>
-								await addVaccination(solicitudes, vaccine.id, customerId)
+								await addVaccination(
+									solicitudes,
+									vaccine.id,
+
+									clientId
+								)
 							}
-							class="cursor-pointer text-red-600"
-						/>
-						<IconTrash
-							onClick={async () => await deleteVaccine(vaccines, vaccine.id)}
-							class="cursor-pointer text-red-600"
-						/>
+							class="cursor-pointer text-blue-600"
+						>
+							Solicitar Cita
+						</button>
+						{isCustomer && (
+							<IconTrash
+								onClick={async () => await deleteVaccine(vaccines, vaccine.id)}
+								class="cursor-pointer text-red-600"
+							/>
+						)}
 					</li>
 				))}
 			</ul>
@@ -141,6 +157,7 @@ export default function VaccinesList(props: VaccinesListProps) {
 						ref={newVaccineNameRef}
 						// disabled={!isMoreTodos}
 						class="flex-1"
+						placeholder="Nombre de la vacuna"
 						required
 					/>
 					<Input
@@ -148,6 +165,7 @@ export default function VaccinesList(props: VaccinesListProps) {
 						// disabled={!isMoreTodos}
 						class="flex-2"
 						required
+						placeholder="Cantidad disponible"
 						type="number"
 					/>
 					<Button /*disabled={!isMoreTodos}*/ type="submit" class="px-4">

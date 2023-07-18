@@ -10,7 +10,7 @@ export const handler: Handlers<null, DashboardState> = {
 	async POST(request, ctx) {
 		try {
 			const solicitude = (await request.json()) as Solicitude;
-			solicitude.client_id = crypto.randomUUID();
+
 			solicitude.date = new Date();
 			const actualDate = new Date();
 

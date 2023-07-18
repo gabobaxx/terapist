@@ -45,6 +45,7 @@ export default function VaccinesPage(props: PageProps<TodosPageData>) {
 					vaccines={props.data.vaccines}
 					solicitudes={props.data.solicitudes}
 					customer={props.data.customer}
+					clientId={props.data.session.user.id}
 				/>
 			</Dashboard>
 		</>

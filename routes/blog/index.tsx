@@ -67,9 +67,7 @@ export default function BlogIndexPage(props: PageProps<Post[]>) {
           {posts.map((post) => <PostCard post={post} />)}
         </div>
       </main>
-      <Footer>
-        <Nav items={BlogFooterNavItems} />
-      </Footer>
+      <Footer/>
     </>
   );
 }

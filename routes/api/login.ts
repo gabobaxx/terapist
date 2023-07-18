@@ -9,6 +9,9 @@ export const handler: Handlers = {
 		const email = form.get('email');
 		assert(typeof email === 'string');
 
+		// const password = form.get('password');
+		// assert(typeof password === 'string');
+
 		/**
 		 * ? Enable this if you want support
 		 * ? for AuthFormWithPassword component
@@ -19,6 +22,13 @@ export const handler: Handlers = {
 		 */
 
 		const headers = new Headers();
+		// const { error } = await createSupabaseClient(
+		// 	request.headers,
+		// 	headers
+		// ).auth.signInWithPassword({
+		// 	email,
+		// 	password,
+		// });
 
 		const { error } = await createSupabaseClient(
 			request.headers,

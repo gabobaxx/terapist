@@ -1,22 +1,41 @@
-// import type { SolicitudesPageData } from '@/routes/dashboard/solicitudes.tsx';
-
 type SolicitudesListProps = {
 	solicitudes: {
 		id: string;
 		vaccine: string | null | undefined;
 		date: Date;
+		user: {
+			id: string;
+			aud: string;
+			role: string;
+			email: string;
+			email_confirmed_at: string;
+			invited_at: string;
+			phone: string;
+			confirmation_sent_at: string;
+			confirmed_at: string;
+			recovery_sent_at: string;
+			last_sign_in_at: string;
+			app_metadata: { provider: 'email'; providers: ['email'] };
+			identities: null;
+			created_at: string;
+			updated_at: string;
+		};
 	}[];
 };
 export default function SolicitudesList(props: SolicitudesListProps) {
-	// const solicitudes = useSignal(props.solicitudes);
-
 	return (
 		<div class="space-y-4">
 			<ul class="divide-y space-y-2">
+				<li class="flex items-center justify-between gap-2 p-2">
+					<div class="flex-1">Fecha</div>
+					<div class="flex-1">Nombre de Vacuna</div>
+					<div class="flex-1">Paciente</div>
+				</li>
 				{props.solicitudes.map((solicitude) => (
 					<li class="flex items-center justify-between gap-2 p-2">
 						<div class="flex-1">{solicitude.date?.toLocaleString()}</div>
 						<div class="flex-1">{solicitude.vaccine}</div>
+						<div class="flex-1">{solicitude.user.email}</div>
 
 						{/* <IconTrash
 							onClick={async () => await updateDate(todos, todo.id)}

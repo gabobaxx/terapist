@@ -8,7 +8,7 @@ export type Solicitude = Database['public']['Tables']['solicitudes']['Insert'];
 export async function getSolicitudes(client: SupabaseClient<Database>) {
 	const { data } = await client
 		.from(TABLE_NAME)
-		.select('id, vaccine_id, client_id, customer_id, date')
+		.select('id, vaccine_id, client_id, date')
 		.throwOnError();
 	return data!;
 }
