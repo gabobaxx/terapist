@@ -35,8 +35,16 @@ export default function SolicitudesList(props: SolicitudesListProps) {
 					<li class="flex items-center justify-between gap-2 p-2">
 						<div class="flex-1">{solicitude.date?.toLocaleString()}</div>
 						<div class="flex-1">{solicitude.vaccine}</div>
-						<div class="flex-1">{solicitude.user.email}</div>
-
+						{solicitude.user.kid ? (
+							<>
+								<div class="flex-1">
+									{solicitude.user.kid.name} {solicitude.user.kid.lastname} (
+									{solicitude.user.kid.age} años)
+								</div>
+							</>
+						) : (
+							<div class="flex-1">{solicitude.user.email}</div>
+						)}
 						{/* <IconTrash
 							onClick={async () => await updateDate(todos, todo.id)}
 							class="cursor-pointer text-red-600"

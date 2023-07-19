@@ -12,34 +12,19 @@ export const handler: Handlers<null, DashboardState> = {
 			const solicitude = (await request.json()) as Solicitude;
 
 			solicitude.date = new Date();
-			const actualDate = new Date();
-
-			// ! getSolicitudes returns the date as string
-			// ! fix typescript and network typing
-			const solicitudes = await getSolicitudes(ctx.state.supabaseClient);
-			const lastSolicitude = solicitudes[solicitudes.length - 1];
-
-			if (lastSolicitude) {
-				const lastSolicitudeDateFromDB = new Date(lastSolicitude.date);
-				console.log(lastSolicitudeDateFromDB.getHours());
-				console.log(actualDate.getHours());
-				// * so, convert string to date type/format
-				solicitude.date =
-					lastSolicitudeDateFromDB.getTime() >= actualDate.getTime()
-						? lastSolicitudeDateFromDB
-						: actualDate;
-			}
 
 			// ? new solicitude date going to be 30 min after the last one
 			solicitude.date = new Date(
 				solicitude.date.getFullYear(),
 				solicitude.date.getMonth(),
-				solicitude.date.getDay(),
+				solicitude.date.getDate(),
 				solicitude.date.getHours(),
 				solicitude.date.getMinutes() + 30
 			);
 
 			await addSolicitude(ctx.state.supabaseClient, solicitude);
+
+			console.log(solicitude.date);
 
 			return Response.json(null, { status: 201 });
 		} catch (error) {

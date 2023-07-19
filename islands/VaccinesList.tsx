@@ -5,7 +5,7 @@ import type { Vaccine } from '@/utils/vaccines.ts';
 // import type { Solicitude } from '@/utils/solicitudes.ts';
 import IconTrash from 'tabler-icons/trash.tsx';
 import { assert } from 'std/testing/asserts.ts';
-import { useRef } from 'preact/hooks';
+import { useRef, useState } from 'preact/hooks';
 import Input from '@/components/Input.tsx';
 import { Database } from '../utils/supabase_types.ts';
 
@@ -79,7 +79,6 @@ async function addVaccination(
 		client_id: clientId,
 	};
 
-	console.log(newSolicitude);
 	if (IS_BROWSER) await requestVaccination(newSolicitude);
 	vaccinationInSignal(solicitudes, newSolicitude);
 }
@@ -110,21 +109,16 @@ export default function VaccinesList(props: VaccinesListProps) {
 			<ul class="divide-y space-y-2">
 				<li class="flex items-center justify-between gap-2 p-2">
 					<div class="flex-1">Nombre de Vacuna</div>
-					<div class="flex-1">Cantidad Disponible</div>
+					<div class="flex-1 pl-20">Monto</div>
 					<div class="flex-1"></div>
 				</li>
 				{vaccines.value.map((vaccine) => (
 					<li class="flex items-center justify-between gap-2 p-2">
 						<div class="flex-1">{vaccine.name}</div>
-						<div class="flex-1">{vaccine.quantity}</div>
+						<div class="flex-1">{vaccine.quantity}$</div>
 						<button
 							onClick={async () =>
-								await addVaccination(
-									solicitudes,
-									vaccine.id,
-
-									clientId
-								)
+								await addVaccination(solicitudes, vaccine.id, clientId)
 							}
 							class="cursor-pointer text-blue-600"
 						>
@@ -165,7 +159,7 @@ export default function VaccinesList(props: VaccinesListProps) {
 						// disabled={!isMoreTodos}
 						class="flex-2"
 						required
-						placeholder="Cantidad disponible"
+						placeholder="Monto"
 						type="number"
 					/>
 					<Button /*disabled={!isMoreTodos}*/ type="submit" class="px-4">

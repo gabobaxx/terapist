@@ -11,6 +11,7 @@ import SolicitudesList from '@/components/SolicitudesList.tsx';
 import { getSolicitudes } from '@/utils/solicitudes.ts';
 import { getVaccines } from '@/utils/vaccines.ts';
 import { supabaseAdminClient } from '@/utils/supabase.ts';
+import { getKids } from '../../utils/kids.ts';
 
 export interface SolicitudesPageData extends DashboardState {
 	solicitudes: {
@@ -24,6 +25,7 @@ export const handler: Handlers<SolicitudesPageData, DashboardState> = {
 	async GET(_request, ctx) {
 		// ! getSolicitudes returns the date as string
 		// ! fix typescript and network typing
+		const kids = await getKids(ctx.state.supabaseClient);
 		const solicitudes = await getSolicitudes(ctx.state.supabaseClient);
 		const vaccines = await getVaccines(ctx.state.supabaseClient);
 		const { data, error } = await supabaseAdminClient.auth.admin.listUsers();
@@ -34,7 +36,17 @@ export const handler: Handlers<SolicitudesPageData, DashboardState> = {
 				(vaccine) => vaccine.id === solicitude.vaccine_id
 			);
 
+			data.users.map((user) => {
+				kids.map((kid) => {
+					if (user.id === kid.client_id) {
+						user.kid = kid;
+					}
+				});
+			});
+
 			const user = data.users.find((user) => user.id === solicitude.client_id);
+
+			console.log(user);
 
 			solicitude.date = new Date(solicitude.date);
 			return {
