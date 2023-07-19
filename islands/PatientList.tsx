@@ -165,7 +165,7 @@ export default function PatientsList(props: clientListProps) {
 	const isMoreTodos =
 		props.isSubscribed || clients.value.length < FREE_PLAN_TODOS_LIMIT;
 
-	const isMoreKids = kids.value.length > 0;
+	const isMoreKids = kids.value.length <= 0;
 
 	return (
 		<div class="space-y-4">
