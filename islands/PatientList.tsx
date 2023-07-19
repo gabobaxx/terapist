@@ -51,7 +51,7 @@ async function createKid(
 	};
 	// console.log(newKid);
 	if (IS_BROWSER) {
-		// const response = await requestCreateKid(newKid);
+		const response = await requestCreateKid(newKid);
 	}
 	createKidInSignal(kids, newKid);
 }
@@ -166,50 +166,70 @@ export default function PatientsList(props: clientListProps) {
 		props.isSubscribed || clients.value.length < FREE_PLAN_TODOS_LIMIT;
 
 	const isMoreKids = kids.value.length <= 0;
+	console.log(props.patients);
 
 	return (
 		<div class="space-y-4">
 			<>
 				<ul class="divide-y space-y-2">
-					<li class="flex items-center justify-between gap-2 p-2">
-						<div class="flex-1">Paciente</div>
-						<div class="flex-1">Edad</div>
-						<div class="flex-1"></div>
-						<div class="flex-2">Representante</div>
-						<div class="flex-1"></div>
-					</li>
-					{clients.value.map((client) => (
-						<li class="flex items-center justify-between gap-2 p-2">
-							{client.kid && (
-								<>
-									<div class="flex-1">{client.kid.name}</div>
-									<div class="flex-1">{client.kid.lastname}</div>
-									<div class="flex-1">{client.kid.age} Años</div>
-								</>
-							)}
-							<div class="flex-1"></div>
-							<div class="flex-1"></div>
-							<div class="flex-1"></div>
-							<div class="flex-1">{client.email}</div>
+					{props.isAdmin ? (
+						<>
+							<li class="flex items-center justify-between gap-2 p-2">
+								<div class="flex-1">Paciente</div>
+								<div class="flex-1">Edad</div>
+								<div class="flex-1"></div>
+								<div class="flex-2">Representante</div>
+								<div class="flex-1"></div>
+							</li>
+							{clients.value.map((client) => (
+								<li class="flex items-center justify-between gap-2 p-2">
+									{client.kid && (
+										<>
+											<div class="flex-1">{client.kid.name}</div>
+											<div class="flex-1">{client.kid.lastname}</div>
+											<div class="flex-1">{client.kid.age} Años</div>
+										</>
+									)}
+									<div class="flex-1"></div>
+									<div class="flex-1"></div>
+									<div class="flex-1"></div>
+									<div class="flex-1">{client.email}</div>
 
-							{props.isAdmin ? (
-								client.is_invited ? (
-									<p>Invitado</p>
-								) : (
-									<Button
-										class="px-4"
-										onClick={async () => {
-											await inviteClient(clients, client.email);
-										}}
-									>
-										Invitar
-									</Button>
-								)
-							) : (
-								<IconTrash class="cursor-pointer text-red-600" />
-							)}
-						</li>
-					))}
+									{props.isAdmin ? (
+										client.is_invited ? (
+											<p>Invitado</p>
+										) : (
+											<Button
+												class="px-4"
+												onClick={async () => {
+													await inviteClient(clients, client.email);
+												}}
+											>
+												Invitar
+											</Button>
+										)
+									) : (
+										<IconTrash class="cursor-pointer text-red-600" />
+									)}
+								</li>
+							))}
+						</>
+					) : (
+						<>
+							<li class="flex items-center justify-between gap-2 p-2">
+								<div class="flex-1">Nombre</div>
+								<div class="flex-1">Apellido</div>
+								<div class="flex-1">Edad</div>
+							</li>
+							{kids.value.map((kid) => (
+								<li class="flex items-center justify-between gap-2 p-2">
+									<div class="flex-1">{kid.name}</div>
+									<div class="flex-1">{kid.lastname}</div>
+									<div class="flex-1">{kid.age} Años</div>
+								</li>
+							))}
+						</>
+					)}
 				</ul>
 				{typeof errorMessage === 'string' && <Notice>{errorMessage}</Notice>}
 

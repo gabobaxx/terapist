@@ -43,6 +43,8 @@ export const handler: Handlers<PatientsPageData, DashboardState> = {
 			});
 		});
 
+		console.log(clients);
+
 		return ctx.render({
 			...ctx.state,
 			clients,
