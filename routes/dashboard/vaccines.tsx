@@ -47,6 +47,12 @@ export default function VaccinesPage(props: PageProps<TodosPageData>) {
 					customer={props.data.customer}
 					clientId={props.data.session.user.id}
 				/>
+				{!props.data.customer && (
+					<>
+						<Notice class="mt-4">Esquema de vacunacion segun la OMS</Notice>
+						<img src="/esquema.jpg" alt="esquema de vacunacion" />
+					</>
+				)}
 			</Dashboard>
 		</>
 	);

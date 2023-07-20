@@ -8,6 +8,7 @@ import { assert } from 'std/testing/asserts.ts';
 import { useRef, useState } from 'preact/hooks';
 import Input from '@/components/Input.tsx';
 import { Database } from '../utils/supabase_types.ts';
+import Notice from '../components/Notice.tsx';
 
 type Solicitude = Database['public']['Tables']['solicitudes']['Update'];
 
@@ -92,6 +93,9 @@ interface VaccinesListProps {
 }
 
 export default function VaccinesList(props: VaccinesListProps) {
+	const [timer, setTimer] = useState(false);
+	const [notice, setNotice] = useState(false);
+
 	const vaccines = useSignal(props.vaccines);
 	const solicitudes = useSignal(props.solicitudes);
 	const clientId = props.clientId;
@@ -106,6 +110,12 @@ export default function VaccinesList(props: VaccinesListProps) {
 
 	return (
 		<div class="space-y-4">
+			{notice && (
+				<Notice class="mb-4 bg-green-300 text-green-700">
+					Solicitud enviada con exito, revisa el modulo de vacunas solicitadas
+					para ver tu cita!
+				</Notice>
+			)}
 			<ul class="divide-y space-y-2">
 				<li class="flex items-center justify-between gap-2 p-2">
 					<div class="flex-1">Nombre de Vacuna</div>
@@ -117,10 +127,16 @@ export default function VaccinesList(props: VaccinesListProps) {
 						<div class="flex-1">{vaccine.name}</div>
 						<div class="flex-1">{vaccine.quantity}$</div>
 						<button
-							onClick={async () =>
-								await addVaccination(solicitudes, vaccine.id, clientId)
-							}
+							onClick={async () => {
+								setTimer(true);
+								await addVaccination(solicitudes, vaccine.id, clientId);
+								setTimer(false);
+								setNotice(true);
+							}}
 							class="cursor-pointer text-blue-600"
+							style={{
+								color: timer ? 'red' : 'blue',
+							}}
 						>
 							Solicitar Cita
 						</button>
