@@ -11,7 +11,7 @@ export default function Hero() {
 			<div class="flex justify-center gap-8 flex-wrap">
 				<LinkButton href="/signup">Probar</LinkButton>
 				<LinkButton
-					href="/blog"
+					href="/blog/manual-de-usuario"
 					class="!bg-white border-2 border-blue-700 text-blue-700 hover:border-black hover:text-black transition duration-300"
 				>
 					¿Cómo funciona?
