@@ -13,7 +13,7 @@ summary: Manual de usuario del sistema.
 - [Tabla de Contenido](#tabla-de-contenido)
   - [¿Cómo crear una cuenta?](#¿cómo-crear-una-cuenta-en-terapist)
   - [¿Cómo iniciar sesión?](#¿cómo-hacer-login-en-terapist)
-  - [¿Cómo invitar un nuevo paciente?](##¿cómo-invitar-un-nuevo-paciente)
+  - [¿Cómo invitar un nuevo paciente?](#¿cómo-invitar-un-nuevo-paciente)
   - [¿Cómo agregar una nueva vacuna?](#¿cómo-agregar-una-nueva-vacuna)
   - [¿Cómo eliminar una vacuna?](#¿cómo-eliminar-una-vacuna)
   - [¿Cómo agregar un paciente?](#¿cómo-agregar-un-paciente)
