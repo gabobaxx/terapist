@@ -27,8 +27,8 @@ summary: Manual de usuario del sistema.
 
 Principalmente, hay dos tipos de cuentas:
 
-- ✔️ **Cuenta de Empresa (centro médico)**: este tipo de cuenta esta pensado para los administradores del centro médico que quiera ofrecer terapist a sus clientes. Para crear este tipo de cuenta tienes que ir a la página de registro y llenar los datos que pide el sistema: correo electrónico (de algún administrador del centro médico) y la contraseña. Con esto ya podrás ingresar al dashboard del sistema donde se puede agregar/eliminar/actualizar/visualizar los pacientes, las vacunas, las solicitudes de vacunación, además podrás acceder a tu cuenta donde visualizarás información personal.
-- ✔️ **Cuenta de Usuario (cliente)**: este tipo de cuenta esta pensado para los clientes de los centros médicos que ofrecen terapist. Para crear este tipo de cuenta debes contactar con tu centro médico de confianza para que ellos te hagan una invitación al sistema mediante un correo electrónico.
+- ✔️ **Cuenta de Empresa (centro médico)**: este tipo de cuenta esta pensado para los administradores del centro médico que quiera ofrecer terapist a sus clientes. Para crear este tipo de cuenta tienes que ir a la [página de registro](https://terapist.deno.dev/signup) y llenar los datos que pide el sistema: correo electrónico (de algún administrador del centro médico) y la contraseña. Con esto ya podrás ingresar al dashboard del sistema donde se puede agregar/eliminar/actualizar/visualizar los pacientes, las vacunas, las solicitudes de vacunación, además podrás acceder a tu cuenta donde visualizarás información personal.
+- ✔️ **Cuenta de Usuario (cliente)**: este tipo de cuenta esta pensado para los clientes de los centros médicos que ofrecen terapist. Para crear este tipo de cuenta debes contactar con tu centro médico de confianza y preguntar si ofrecen terapist para que ellos te hagan una invitación al sistema mediante un correo electrónico.
 
 Una vez que se haya hecho el proceso de registro (cuenta empresa) o de invitación (cuenta usuario) el sistema enviará un correo electrónico de confirmación para terminar de crear tu cuenta: 
 
@@ -42,7 +42,7 @@ Una vez que se haya hecho el proceso de registro (cuenta empresa) o de invitaci�
 
 ## ¿Cómo hacer login en Terapist?
 
-- ✔️ Entra a [Terapist](https://terapist.deno.dev)
+- ✔️ Entra a [Terapist](https://terapist.deno.dev/login)
 - ✔️ Haz click en la parte superior derecha donde dice **dashboard**
 - ✔️ Escribe tu correo electrónico y haz click en el botón de login
 - ✔️ Revisa tu correo y abre el último mensaje (revisa bandeja de entrada o correos no deseados/spam) que dice **Link de Acceso - Terapist**, haz click en **(Link para Acceder)**
@@ -54,6 +54,7 @@ Una vez que se haya hecho el proceso de registro (cuenta empresa) o de invitaci�
 
 ## ¿Cómo invitar un nuevo paciente?
 
+- ✔️ Entra a la [página de pacientes](https://terapist.deno.dev/dashboard/patients)
 - ✔️ Agrega el correo electrónico del cliente al que quieres agregar y le das al botón de **(+)**
 - ✔️ Haz click en el botón **(Invitar)**
 - ✔️ Pregúntale al cliente si le llego el correo electrónico de invitación para que pueda seguir los pasos anteriormente explicados.
@@ -62,6 +63,7 @@ Una vez que se haya hecho el proceso de registro (cuenta empresa) o de invitaci�
 
 ## ¿Cómo agregar una nueva vacuna?
 
+- ✔️ Entra a la [página de vacunas disponibles](https://terapist.deno.dev/dashboard/vaccines)
 - ✔️ Agrega Nombre y Monto de la vacuna y haz click en el botón de **(+)**
 
 **[⬆ Volver a la tabla de contenido](#tabla-de-contenido)**
@@ -69,6 +71,7 @@ Una vez que se haya hecho el proceso de registro (cuenta empresa) o de invitaci�
 
 ## ¿Cómo eliminar una vacuna?
 
+- ✔️ Entra a la [página de vacunas disponibles](https://terapist.deno.dev/dashboard/vaccines)
 - ✔️ Haz click en el botón de la basura (🗑)
 
 **[⬆ Volver a la tabla de contenido](#tabla-de-contenido)**
@@ -79,6 +82,7 @@ Una vez que se haya hecho el proceso de registro (cuenta empresa) o de invitaci�
 
 El sistema (por ahora) solo deja agregar 1 solo paciente por usuario y para agregarlo es muy sencillo: 
 
+- ✔️ Entra a la [página de pacientes](https://terapist.deno.dev/dashboard/patients)
 - ✔️ Agrega Nombre, Apellido y Edad y haz click en el botón de **(+)**
 
 **[⬆ Volver a la tabla de contenido](#tabla-de-contenido)**
@@ -87,7 +91,8 @@ El sistema (por ahora) solo deja agregar 1 solo paciente por usuario y para agre
 
 Para solicitar una cita de vacunación:
 
-- ✔️ Haz click en Solicitar Cita
+- ✔️ Entra a la [página de vacunas disponibles](https://terapist.deno.dev/dashboard/vaccines)
+- ✔️ Haz click en **Solicitar Cita**
 
 **[⬆ Volver a la tabla de contenido](#tabla-de-contenido)**
 
@@ -95,6 +100,6 @@ Para solicitar una cita de vacunación:
 
 ## ¿Cómo visualizar las solicitudes de vacunación?
 
-En la página de **Vacunas Solicitadas** se podrá visualizar las citas con su fecha y paciente.
+En la página de [**Vacunas Solicitadas**](https://terapist.deno.dev/dashboard/solicitudes) se podrá visualizar las citas con su fecha y paciente.
 
 **[⬆ Volver a la tabla de contenido](#tabla-de-contenido)**
