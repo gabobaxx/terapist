@@ -30,7 +30,7 @@ export const handler: Handlers = {
 		// 	password,
 		// });
 
-		const { error } = await createSupabaseClient(
+		const { error, data } = await createSupabaseClient(
 			request.headers,
 			headers
 		).auth.signInWithOtp({
@@ -40,9 +40,12 @@ export const handler: Handlers = {
 			},
 		});
 
-		let redirectUrl =
-			new URL(request.url).searchParams.get('redirect_url') ??
-			AUTHENTICATED_REDIRECT_PATH;
+		// let redirectUrl =
+		// 	new URL(request.url).searchParams.get('redirect_url') ??
+		// 	AUTHENTICATED_REDIRECT_PATH;
+
+		let redirectUrl = `/login?success=true`;
+
 		if (error) {
 			redirectUrl = `/login?error=${encodeURIComponent(error.message)}`;
 		}

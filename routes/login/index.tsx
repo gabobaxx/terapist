@@ -22,6 +22,7 @@ export const handler: Handlers = {
 
 export default function LoginPage(props: PageProps) {
 	const errorMessage = props.url.searchParams.get('error');
+	const success = props.url.searchParams.get('success');
 
 	return (
 		<>
@@ -33,19 +34,26 @@ export default function LoginPage(props: PageProps) {
 					</a>
 					{errorMessage === 'Signups not allowed for otp' && (
 						<div>
-							<Notice>
-								Usuario no encontrado,{' '}
-								<a href="/signup" class="text-gray-500 hover:text-black">
-									crea una cuenta
-								</a>
+							<Notice class="mb-4 bg-red-300 text-red-700">
+								Usuario no encontrado
 							</Notice>
 						</div>
 					)}
+
+					{success === 'true' && (
+						<div>
+							<Notice class="mb-4 bg-green-300 text-green-700">
+								Te hemos enviado el link de acceso. ¡Revisa tu correo
+								electronico!
+							</Notice>
+						</div>
+					)}
+
 					<AuthForm type="Login" />
 					<hr class="my-4" />
 
 					<div class="text-center text-gray-500 hover:text-black mt-8">
-						<a href="/signup">No tienes una cuenta? Crear una</a>
+						<a href="/signup">¿No tienes una cuenta? Crear una</a>
 					</div>
 				</div>
 			</div>
