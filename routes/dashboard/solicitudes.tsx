@@ -48,7 +48,6 @@ export const handler: Handlers<SolicitudesPageData, DashboardState> = {
 
 			solicitude.date = new Date(solicitude.date);
 
-			solicitude.date.toLocaleString('es-US', { timeZone: 'America/Caracas' });
 			return {
 				id: solicitude.id,
 				vaccine: vaccine?.name,

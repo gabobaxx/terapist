@@ -33,7 +33,11 @@ export default function SolicitudesList(props: SolicitudesListProps) {
 				</li>
 				{props.solicitudes.map((solicitude) => (
 					<li class="flex items-center justify-between gap-2 p-2">
-						<div class="flex-1">{solicitude.date?.toLocaleString()}</div>
+						<div class="flex-1">
+							{solicitude.date.toLocaleString('es-US', {
+								timeZone: 'America/Caracas',
+							})}
+						</div>
 						<div class="flex-1">{solicitude.vaccine}</div>
 						{solicitude.user.kid ? (
 							<>
