@@ -46,9 +46,9 @@ export const handler: Handlers<SolicitudesPageData, DashboardState> = {
 
 			const user = data.users.find((user) => user.id === solicitude.client_id);
 
-			console.log(user);
-
 			solicitude.date = new Date(solicitude.date);
+
+			solicitude.date.toLocaleString('es-US', { timeZone: 'America/Caracas' });
 			return {
 				id: solicitude.id,
 				vaccine: vaccine?.name,
