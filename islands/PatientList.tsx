@@ -166,147 +166,186 @@ export default function PatientsList(props: clientListProps) {
 		props.isSubscribed || clients.value.length < FREE_PLAN_TODOS_LIMIT;
 
 	const isMoreKids = kids.value.length <= 0;
-	console.log(props.patients);
 
 	return (
-		<div class="space-y-4">
-			<>
-				<ul class="divide-y space-y-2">
-					{props.isAdmin ? (
-						<>
-							<li class="flex items-center justify-between gap-2 p-2">
-								<div class="flex-1">Paciente</div>
-								<div class="flex-1">Edad</div>
-								<div class="flex-1"></div>
-								<div class="flex-2">Representante</div>
-								<div class="flex-1"></div>
-							</li>
-							{clients.value.map((client) => (
-								<li class="flex items-center justify-between gap-2 p-2">
-									{client.kid && (
-										<>
-											<div class="flex-1">{client.kid.name}</div>
-											<div class="flex-1">{client.kid.lastname}</div>
-											<div class="flex-1">{client.kid.age} Años</div>
-										</>
-									)}
-									<div class="flex-1"></div>
-									<div class="flex-1"></div>
-									<div class="flex-1"></div>
-									<div class="flex-1">{client.email}</div>
+		<>
+			<div className="flex flex-col">
+				<div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
+					<div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+						<div className="overflow-hidden">
+							{props.isAdmin ? (
+								<table className="min-w-full text-left text-sm font-light">
+									<thead className="border-b font-medium dark:border-neutral-500">
+										<tr>
+											<th scope="col" className="px-6 py-4">
+												Paciente
+											</th>
+											<th scope="col" className="px-6 py-4">
+												Edad
+											</th>
+											<th scope="col" className="px-6 py-4">
+												Representante
+											</th>
+										</tr>
+									</thead>
+									<tbody>
+										{clients.value.map((client) => {
+											return (
+												<tr className="border-b dark:border-neutral-500">
+													{client.kid ? (
+														<>
+															<td className="whitespace-nowrap px-6 py-4 font-medium">
+																{client.kid.name} {client.kid.lastname}
+															</td>
+															<td className="whitespace-nowrap px-6 py-4">
+																{client.kid.age} Años
+															</td>
+														</>
+													) : (
+														<>
+															<td className="whitespace-nowrap px-6 py-4 font-medium text-red-700">
+																No ha agregado
+															</td>
+															<td className="whitespace-nowrap px-6 py-4 text-red-700">
+																paciente
+															</td>
+														</>
+													)}
+													<td className="whitespace-nowrap px-6 py-4">
+														{client.email}
+													</td>
+													<td className="whitespace-nowrap px-6 py-4">
+														{client.is_invited ? (
+															<p>(Invitado)</p>
+														) : (
+															<Button
+																class="px-4"
+																onClick={async () => {
+																	await inviteClient(clients, client.email);
+																}}
+															>
+																Invitar
+															</Button>
+														)}
+													</td>
+												</tr>
+											);
+										})}
+									</tbody>
+								</table>
+							) : (
+								<table className="min-w-full text-left text-sm font-light">
+									<thead className="border-b font-medium dark:border-neutral-500">
+										<tr>
+											<th scope="col" className="px-6 py-4">
+												Nombre
+											</th>
+											<th scope="col" className="px-6 py-4">
+												Apellido
+											</th>
+											<th scope="col" className="px-6 py-4">
+												Edad
+											</th>
+										</tr>
+									</thead>
+									<tbody>
+										{kids.value.map((kid) => {
+											return (
+												<tr className="border-b dark:border-neutral-500">
+													<td className="whitespace-nowrap px-6 py-4 font-medium">
+														{kid.name}
+													</td>
+													<td className="whitespace-nowrap px-6 py-4 font-medium">
+														{kid.lastname}
+													</td>
+													<td className="whitespace-nowrap px-6 py-4">
+														{kid.age} Años
+													</td>
+												</tr>
+											);
+										})}
+									</tbody>
+								</table>
+							)}
+						</div>
+					</div>
+				</div>
+			</div>
+			{typeof errorMessage === 'string' && <Notice>{errorMessage}</Notice>}
 
-									{props.isAdmin ? (
-										client.is_invited ? (
-											<p>Invitado</p>
-										) : (
-											<Button
-												class="px-4"
-												onClick={async () => {
-													await inviteClient(clients, client.email);
-												}}
-											>
-												Invitar
-											</Button>
-										)
-									) : (
-										<IconTrash class="cursor-pointer text-red-600" />
-									)}
-								</li>
-							))}
-						</>
-					) : (
-						<>
-							<li class="flex items-center justify-between gap-2 p-2">
-								<div class="flex-1">Nombre</div>
-								<div class="flex-1">Apellido</div>
-								<div class="flex-1">Edad</div>
-							</li>
-							{kids.value.map((kid) => (
-								<li class="flex items-center justify-between gap-2 p-2">
-									<div class="flex-1">{kid.name}</div>
-									<div class="flex-1">{kid.lastname}</div>
-									<div class="flex-1">{kid.age} Años</div>
-								</li>
-							))}
-						</>
-					)}
-				</ul>
-				{typeof errorMessage === 'string' && <Notice>{errorMessage}</Notice>}
+			{props.isAdmin ? (
+				<>
+					<form
+						class="flex gap-4 mt-4"
+						onSubmit={async (event) => {
+							event.preventDefault();
+							props.isAdmin
+								? await createClient(clients, newClientRef.current!.value, {
+										setError,
+								  })
+								: null; // createclient() -> coming soon!
+							newClientRef.current!.form!.reset();
+						}}
+					>
+						<Input
+							ref={newClientRef}
+							disabled={!isMoreTodos}
+							class="flex-1"
+							required
+							placeholder="Agrega un correo@electronico.com"
+						/>
+						<Button disabled={!isMoreTodos} type="submit" class="px-4">
+							+
+						</Button>
+					</form>
+				</>
+			) : (
+				<>
+					<form
+						class="flex flex-col gap-4 lg:flex-row"
+						onSubmit={async (event) => {
+							event.preventDefault();
+							await createKid(
+								kids,
+								kidNameRef.current!.value,
+								kidLastnameRef.current!.value,
+								parseInt(kidAgeRef.current!.value),
+								props.client_id
+							);
 
-				{props.isAdmin ? (
-					<>
-						<form
-							class="flex gap-4"
-							onSubmit={async (event) => {
-								event.preventDefault();
-								props.isAdmin
-									? await createClient(clients, newClientRef.current!.value, {
-											setError,
-									  })
-									: null; // createclient() -> coming soon!
-								newClientRef.current!.form!.reset();
-							}}
-						>
-							<Input
-								ref={newClientRef}
-								disabled={!isMoreTodos}
-								class="flex-1"
-								required
-								placeholder="Agrega un correo@electronico.com"
-							/>
-							<Button disabled={!isMoreTodos} type="submit" class="px-4">
-								+
-							</Button>
-						</form>
-					</>
-				) : (
-					<>
-						<form
-							class="flex gap-4"
-							onSubmit={async (event) => {
-								event.preventDefault();
-								await createKid(
-									kids,
-									kidNameRef.current!.value,
-									kidLastnameRef.current!.value,
-									parseInt(kidAgeRef.current!.value),
-									props.client_id
-								);
-
-								kidNameRef.current!.form!.reset();
-								kidLastnameRef.current!.form!.reset();
-								kidAgeRef.current!.form!.reset();
-							}}
-						>
-							<Input
-								ref={kidNameRef}
-								disabled={!isMoreKids}
-								class="flex-1"
-								required
-								placeholder="Nombre"
-							/>
-							<Input
-								ref={kidLastnameRef}
-								disabled={!isMoreKids}
-								class="flex-1"
-								required
-								placeholder="Apellido"
-							/>
-							<Input
-								disabled={!isMoreKids}
-								ref={kidAgeRef}
-								class="flex-2"
-								required
-								placeholder="Edad"
-								type="number"
-							/>
-							<Button disabled={!isMoreKids} type="submit" class="px-4">
-								+
-							</Button>
-						</form>
-					</>
-				)}
-			</>
-		</div>
+							kidNameRef.current!.form!.reset();
+							kidLastnameRef.current!.form!.reset();
+							kidAgeRef.current!.form!.reset();
+						}}
+					>
+						<Input
+							ref={kidNameRef}
+							disabled={!isMoreKids}
+							class="flex-1"
+							required
+							placeholder="Nombre"
+						/>
+						<Input
+							ref={kidLastnameRef}
+							disabled={!isMoreKids}
+							class="flex-1"
+							required
+							placeholder="Apellido"
+						/>
+						<Input
+							disabled={!isMoreKids}
+							ref={kidAgeRef}
+							class="flex-2"
+							required
+							placeholder="Edad"
+							type="number"
+						/>
+						<Button disabled={!isMoreKids} type="submit" class="px-4">
+							+
+						</Button>
+					</form>
+				</>
+			)}
+		</>
 	);
 }
