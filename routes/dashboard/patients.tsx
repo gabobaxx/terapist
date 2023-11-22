@@ -8,9 +8,10 @@ import Dashboard from '@/components/Dashboard.tsx';
 import { getClients } from '@/utils/clients.ts';
 import { getKids } from '@/utils/kids.ts';
 import { Database } from '@/utils/supabase_types.ts';
+import { supabaseAdminClient } from '@/utils/supabase.ts';
 // * Islands
-import PatientList from '@/islands/PatientList.tsx';
-import { supabaseAdminClient } from '../../utils/supabase.ts';
+import AdminPatientsList from '@/islands/AdminPatientsList.tsx';
+import ClientPatientsList from '@/islands/ClientPatientList.tsx';
 
 interface PatientsPageData extends DashboardState {
 	clients: Database['public']['Tables']['clients']['Update'][];
@@ -54,18 +55,24 @@ export const handler: Handlers<PatientsPageData, DashboardState> = {
 };
 
 export default function PatientsPage(props: PageProps<PatientsPageData>) {
+	const client_id = props.data.session.user.id;
+	const isAdmin = Boolean(props.data.customer);
+	const kids = props.data.kids;
+	const patients = props.data.clients;
+
 	return (
 		<>
 			<Head title="Patients" />
 			<Dashboard active="/dashboard/patients">
-				<PatientList
-					isSubscribed={true}
-					patients={props.data.clients}
-					isAdmin={Boolean(props.data.customer)}
-					client_id={props.data.session.user.id}
-					kids={props.data.kids}
-					users={props.data.users}
-				/>
+				{isAdmin ? (
+					<AdminPatientsList
+						isAdmin={true}
+						isSubscribed={true}
+						patients={patients}
+					/>
+				) : (
+					<ClientPatientsList client_id={client_id} kids={kids} />
+				)}
 			</Dashboard>
 		</>
 	);

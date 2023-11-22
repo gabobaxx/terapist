@@ -29,10 +29,11 @@ import * as $22 from "./routes/login/index.tsx";
 import * as $23 from "./routes/login/success.tsx";
 import * as $24 from "./routes/logout.ts";
 import * as $25 from "./routes/signup.tsx";
-import * as $$0 from "./islands/AuthFragmentCatcher.tsx";
-import * as $$1 from "./islands/PatientList.tsx";
-import * as $$2 from "./islands/TodoList.tsx";
-import * as $$3 from "./islands/VaccinesList.tsx";
+import * as $$0 from "./islands/AdminPatientsList.tsx";
+import * as $$1 from "./islands/AuthFragmentCatcher.tsx";
+import * as $$2 from "./islands/ClientPatientList.tsx";
+import * as $$3 from "./islands/TodoList.tsx";
+import * as $$4 from "./islands/VaccinesList.tsx";
 
 const manifest = {
   routes: {
@@ -64,10 +65,11 @@ const manifest = {
     "./routes/signup.tsx": $25,
   },
   islands: {
-    "./islands/AuthFragmentCatcher.tsx": $$0,
-    "./islands/PatientList.tsx": $$1,
-    "./islands/TodoList.tsx": $$2,
-    "./islands/VaccinesList.tsx": $$3,
+    "./islands/AdminPatientsList.tsx": $$0,
+    "./islands/AuthFragmentCatcher.tsx": $$1,
+    "./islands/ClientPatientList.tsx": $$2,
+    "./islands/TodoList.tsx": $$3,
+    "./islands/VaccinesList.tsx": $$4,
   },
   baseUrl: import.meta.url,
   config,
