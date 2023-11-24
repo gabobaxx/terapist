@@ -3,9 +3,12 @@ import { Database } from '@/utils/supabase_types.ts';
 import { FREE_PLAN_TODOS_LIMIT } from '@/constants.ts';
 import { IS_BROWSER } from '$fresh/runtime.ts';
 import { type Signal, useSignal } from '@preact/signals';
-import { useRef, useState, StateUpdater } from 'preact/hooks';
+import { useRef, useState, StateUpdater, MutableRef } from 'preact/hooks';
 import Button from '@/components/Button.tsx';
 import Input from '@/components/Input.tsx';
+
+import { JSX } from 'preact/jsx-runtime';
+import Notice from '@/components/Notice.tsx';
 
 type ClientFromDB = Database['public']['Tables']['clients']['Update'];
 
@@ -39,15 +42,15 @@ function createClientInSignal(clients: Signal<Client[]>, client: Client) {
 async function createClient(
 	clients: Signal<Client[]>,
 	email: string,
-	options?: {
-		setError: StateUpdater<string | null>;
-	}
+	ref: MutableRef<HTMLInputElement | null>
 ) {
 	const newClient: Client = { email, user_id: crypto.randomUUID() };
 	if (IS_BROWSER) {
 		const response = await requestCreateClient(newClient);
 		if (response) {
-			options?.setError('Email ya se encuentra registrado');
+			console.log(response);
+			ref.current!.style.borderColor = 'red';
+
 			return;
 		}
 	}
@@ -100,10 +103,32 @@ interface AdminPatientsListProps {
 export default function AdminPatientsList(props: AdminPatientsListProps) {
 	const clients = useSignal(props.patients);
 	const newClientRef = useRef<HTMLInputElement | null>(null);
-	const [errorMessage, setError] = useState<string | null>(null);
-
+	// const [errorMessage, setError] = useState<string | null>(null);
+	const errorMessage = useSignal<string | null>(null);
 	const isMoreTodos =
 		props.isSubscribed || clients.value.length < FREE_PLAN_TODOS_LIMIT;
+
+	const onSubmit = async (event: JSX.TargetedEvent<HTMLFormElement, Event>) => {
+		event.preventDefault();
+
+		const newClient: Client = {
+			email: newClientRef.current!.value,
+			user_id: crypto.randomUUID(),
+		};
+
+		const response = await requestCreateClient(newClient);
+		if (response) {
+			errorMessage.value = `Email ya se encuentra registrado. ¡Prueba con otro!`;
+			newClientRef.current!.form!.reset();
+
+			return;
+		}
+
+		createClientInSignal(clients, newClient);
+
+		errorMessage.value = ``;
+		newClientRef.current!.form!.reset();
+	};
 
 	return (
 		<>
@@ -137,10 +162,10 @@ export default function AdminPatientsList(props: AdminPatientsListProps) {
 								) : (
 									<>
 										<td className="whitespace-nowrap px-6 py-4 font-medium text-red-700">
-											No ha agregado
+											No ha agregado paciente
 										</td>
 										<td className="whitespace-nowrap px-6 py-4 text-red-700">
-											paciente
+											0 Años
 										</td>
 									</>
 								)}
@@ -164,24 +189,27 @@ export default function AdminPatientsList(props: AdminPatientsListProps) {
 					})}
 				</tbody>
 			</table>
+
 			<form
-				class="flex gap-4 mt-4"
-				onSubmit={async (event) => {
-					event.preventDefault();
-					props.isAdmin
-						? await createClient(clients, newClientRef.current!.value, {
-								setError,
-						  })
-						: null; // createclient() -> coming soon!
-					newClientRef.current!.form!.reset();
-				}}
+				class={
+					errorMessage.value
+						? `flex flex-col gap-4 mt-4`
+						: `flex flex-col gap-4 mt-4 lg:flex-row`
+				}
+				onSubmit={onSubmit}
 			>
+				{errorMessage.value && (
+					<Notice class="bg-red-100 text-red-700 flex-1">
+						{errorMessage.value}
+					</Notice>
+				)}
 				<Input
-					ref={newClientRef}
-					disabled={!isMoreTodos}
 					class="flex-1"
-					required
+					disabled={!isMoreTodos}
 					placeholder="Agrega un correo@electronico.com"
+					ref={newClientRef}
+					required
+					type="email"
 				/>
 				<Button disabled={!isMoreTodos} type="submit" class="px-4">
 					+

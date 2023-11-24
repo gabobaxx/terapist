@@ -5,7 +5,7 @@ import { DashboardState } from './_middleware.ts';
 import Head from '@/components/Head.tsx';
 import Dashboard from '@/components/Dashboard.tsx';
 // * Utils
-import { getClients } from '@/utils/clients.ts';
+import { getClients, getUsers } from '@/utils/clients.ts';
 import { getKids } from '@/utils/kids.ts';
 import { Database } from '@/utils/supabase_types.ts';
 import { supabaseAdminClient } from '@/utils/supabase.ts';
@@ -17,7 +17,6 @@ interface PatientsPageData extends DashboardState {
 	clients: Database['public']['Tables']['clients']['Update'][];
 	customer: Database['public']['Tables']['customers']['Update'] | null;
 	kids: Database['public']['Tables']['kids']['Row'][];
-	users: any;
 }
 
 export const handler: Handlers<PatientsPageData, DashboardState> = {
@@ -25,9 +24,9 @@ export const handler: Handlers<PatientsPageData, DashboardState> = {
 		const customer = await ctx.state.getCustomer();
 		const clients = await getClients(ctx.state.supabaseClient);
 		const kids = await getKids(ctx.state.supabaseClient);
-		const { data } = await supabaseAdminClient.auth.admin.listUsers();
+		const users = await getUsers();
 
-		data.users.map((user) => {
+		users.map((user) => {
 			kids.map((kid) => {
 				if (user.id === kid.client_id) {
 					user.kid = kid;
@@ -35,10 +34,12 @@ export const handler: Handlers<PatientsPageData, DashboardState> = {
 			});
 		});
 
+		// ! este error se arregla: ingresando en la base de datos la propiedad kid
+		// TODO: Revisar los tipos y la estructura de la base de datos.
 		clients.map((client) => {
-			data.users.map((user) => {
+			users.map((user) => {
 				if (client.email === user.email) {
-					client.kid = user.kid || '';
+					client.kid = user.kid || {};
 					client.is_invited = true;
 				}
 			});
@@ -49,7 +50,6 @@ export const handler: Handlers<PatientsPageData, DashboardState> = {
 			clients,
 			customer,
 			kids,
-			users: data.users,
 		});
 	},
 };
