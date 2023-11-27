@@ -133,9 +133,11 @@ export default function VaccinesList(props: VaccinesListProps) {
 								setTimer(false);
 								setNotice(true);
 							}}
+							disabled={isCustomer}
 							class="cursor-pointer text-blue-600"
 							style={{
-								color: timer ? 'red' : 'blue',
+								color: timer || isCustomer ? 'gray' : 'blue',
+								cursor: 'not-allowed',
 							}}
 						>
 							Solicitar Cita
