@@ -36,11 +36,12 @@ export const handler: Handlers<PatientsPageData, DashboardState> = {
 
 		// ! este error se arregla: ingresando en la base de datos la propiedad kid
 		// TODO: Revisar los tipos y la estructura de la base de datos.
+
 		clients.map((client) => {
 			users.map((user) => {
 				if (client.email === user.email) {
 					client.kid = user.kid || {};
-					client.is_invited = true;
+					client.is_invited = Boolean(user.confirmed_at);
 				}
 			});
 		});

@@ -1,6 +1,6 @@
 import type { Handlers } from '$fresh/server.ts';
 import { AuthError } from '@supabase/supabase-js';
-import { createClient, getClients } from '@/utils/clients.ts';
+import { createClient, deleteClient, getClients } from '@/utils/clients.ts';
 import type { DashboardState } from '@/routes/dashboard/_middleware.ts';
 
 import { supabaseAdminClient } from '@/utils/supabase.ts';
@@ -71,7 +71,7 @@ export const handler: Handlers<null, DashboardState> = {
 					is_invited: true,
 					user_id: data.user?.id,
 				})
-				.eq('id', client.id);
+				.eq('user_id', client.id);
 
 			assert(!error, error?.message);
 
@@ -81,6 +81,18 @@ export const handler: Handlers<null, DashboardState> = {
 			const status = error instanceof AuthError ? 401 : 400;
 
 			return new Response(error.message, { status });
+		}
+	},
+	async DELETE(request, ctx) {
+		try {
+			const { id } = await request.json();
+			await deleteClient(ctx.state.supabaseClient, id);
+
+			return new Response(null, { status: 202 });
+		} catch (error) {
+			const status = error instanceof AuthError ? 401 : 400;
+
+			return new Response(error, { status });
 		}
 	},
 };

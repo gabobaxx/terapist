@@ -89,3 +89,10 @@ export async function getUsers(): Promise<User[]> {
 	});
 	return users;
 }
+
+export async function deleteClient(
+	client: SupabaseClient<Database>,
+	id: Client['user_id']
+) {
+	await client.from(TABLE_NAME).delete().eq('user_id', id).throwOnError();
+}

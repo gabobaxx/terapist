@@ -9,6 +9,7 @@ import Input from '@/components/Input.tsx';
 
 import { JSX } from 'preact/jsx-runtime';
 import Notice from '@/components/Notice.tsx';
+import IconTrash from 'https://deno.land/x/tabler_icons_tsx@0.0.2/tsx/trash.tsx';
 
 type ClientFromDB = Database['public']['Tables']['clients']['Update'];
 
@@ -39,24 +40,6 @@ function createClientInSignal(clients: Signal<Client[]>, client: Client) {
 	clients.value = [...clients.value, client];
 }
 
-async function createClient(
-	clients: Signal<Client[]>,
-	email: string,
-	ref: MutableRef<HTMLInputElement | null>
-) {
-	const newClient: Client = { email, user_id: crypto.randomUUID() };
-	if (IS_BROWSER) {
-		const response = await requestCreateClient(newClient);
-		if (response) {
-			console.log(response);
-			ref.current!.style.borderColor = 'red';
-
-			return;
-		}
-	}
-	createClientInSignal(clients, newClient);
-}
-
 async function requestInviteClient(client: Client) {
 	const response = await fetch('/dashboard/api/client', {
 		method: 'PUT',
@@ -83,15 +66,37 @@ async function inviteClient(
 ) {
 	const client = clients.value.find((p) => p.email === email);
 	if (!client) throw new Error('Client does not exists in signal');
+
 	const newClient = {
 		id: client?.user_id,
 		customer_id: client?.customer_id,
-		is_invited: !client?.is_invited,
+		is_invited: client?.is_invited,
 		email: client?.email,
 		created_at: client?.created_at,
+		kid: client?.kid,
 	};
+
 	if (IS_BROWSER) await requestInviteClient(newClient);
 	updateClientInSignal(clients, client, newClient);
+}
+
+async function requestDeleteClient(id: string | undefined) {
+	const response = await fetch('/dashboard/api/client', {
+		method: 'DELETE',
+		body: JSON.stringify({ id }),
+	});
+	assert(response.ok);
+}
+
+function deleteClientInSignal(
+	clients: Signal<Client[]>,
+	id: string | undefined
+) {
+	clients.value = clients.value.filter((client) => client.user_id !== id);
+}
+async function deleteClient(clients: Signal<Client[]>, id: string | undefined) {
+	if (IS_BROWSER) await requestDeleteClient(id);
+	deleteClientInSignal(clients, id);
 }
 
 interface AdminPatientsListProps {
@@ -102,8 +107,9 @@ interface AdminPatientsListProps {
 
 export default function AdminPatientsList(props: AdminPatientsListProps) {
 	const clients = useSignal(props.patients);
+	const [timer, setTimer] = useState(false);
+	const [notice, setNotice] = useState(false);
 	const newClientRef = useRef<HTMLInputElement | null>(null);
-	// const [errorMessage, setError] = useState<string | null>(null);
 	const errorMessage = useSignal<string | null>(null);
 	const isMoreTodos =
 		props.isSubscribed || clients.value.length < FREE_PLAN_TODOS_LIMIT;
@@ -120,7 +126,6 @@ export default function AdminPatientsList(props: AdminPatientsListProps) {
 		if (response) {
 			errorMessage.value = `Email ya se encuentra registrado. ¡Prueba con otro!`;
 			newClientRef.current!.form!.reset();
-
 			return;
 		}
 
@@ -131,7 +136,13 @@ export default function AdminPatientsList(props: AdminPatientsListProps) {
 	};
 
 	return (
-		<>
+		<div>
+			{notice && (
+				<Notice class="mb-4 bg-green-300 text-green-700">
+					Cliente invitado con éxito, revisa el correo electronico para ver la
+					invitación!
+				</Notice>
+			)}
 			<table className="min-w-full text-left text-sm font-light">
 				<thead className="border-b font-medium dark:border-neutral-500">
 					<tr>
@@ -150,7 +161,7 @@ export default function AdminPatientsList(props: AdminPatientsListProps) {
 					{clients.value.map((client) => {
 						return (
 							<tr className="border-b dark:border-neutral-500">
-								{client.kid ? (
+								{client.kid?.name ? (
 									<>
 										<td className="whitespace-nowrap px-6 py-4 font-medium">
 											{client.kid.name} {client.kid.lastname}
@@ -170,20 +181,33 @@ export default function AdminPatientsList(props: AdminPatientsListProps) {
 									</>
 								)}
 								<td className="whitespace-nowrap px-6 py-4">{client.email}</td>
-								<td className="whitespace-nowrap px-6 py-4">
-									{client.is_invited ? (
-										<p>(Invitado)</p>
-									) : (
-										<Button
-											class="px-4"
-											onClick={async () => {
-												await inviteClient(clients, client.email);
-											}}
-										>
-											Invitar
-										</Button>
-									)}
-								</td>
+
+								{!client.is_invited && (
+									<>
+										<td className="whitespace-nowrap px-6 py-4">
+											<Button
+												class="px-4 flex-1"
+												onClick={async () => {
+													setTimer(true);
+													await inviteClient(clients, client.email);
+													setTimer(false);
+													setNotice(true);
+												}}
+												disabled={timer}
+											>
+												{timer ? 'Invitando...' : 'Invitar'}
+											</Button>
+										</td>
+										<td className="whitespace-nowrap px-6 py-4">
+											<IconTrash
+												class="cursor-pointer text-red-600 flex-1"
+												onClick={async () =>
+													await deleteClient(clients, client?.user_id)
+												}
+											/>
+										</td>
+									</>
+								)}
 							</tr>
 						);
 					})}
@@ -215,6 +239,6 @@ export default function AdminPatientsList(props: AdminPatientsListProps) {
 					+
 				</Button>
 			</form>
-		</>
+		</div>
 	);
 }
