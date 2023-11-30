@@ -31,30 +31,34 @@ export default function SolicitudesList(props: SolicitudesListProps) {
 					<div class="flex-1">Nombre de Vacuna</div>
 					<div class="flex-1">Paciente</div>
 				</li>
-				{props.solicitudes.map((solicitude) => (
-					<li class="flex items-center justify-between gap-2 p-2">
-						<div class="flex-1">
-							{solicitude.date.toLocaleString('es-US', {
-								timeZone: 'America/Caracas',
-							})}
-						</div>
-						<div class="flex-1">{solicitude.vaccine}</div>
-						{solicitude.user.kid ? (
-							<>
+				{props.solicitudes.map((solicitude) => {
+					if (new Date() < solicitude.date) {
+						return (
+							<li class="flex items-center justify-between gap-2 p-2">
 								<div class="flex-1">
-									{solicitude.user.kid.name} {solicitude.user.kid.lastname} (
-									{solicitude.user.kid.age} años)
+									{solicitude.date.toLocaleString('es-US', {
+										timeZone: 'America/Caracas',
+									})}
 								</div>
-							</>
-						) : (
-							<div class="flex-1">{solicitude.user.email}</div>
-						)}
-						{/* <IconTrash
+								<div class="flex-1">{solicitude.vaccine}</div>
+								{solicitude.user.kid ? (
+									<>
+										<div class="flex-1">
+											{solicitude.user.kid.name} {solicitude.user.kid.lastname}{' '}
+											({solicitude.user.kid.age} años)
+										</div>
+									</>
+								) : (
+									<div class="flex-1">{solicitude.user.email}</div>
+								)}
+								{/* <IconTrash
 							onClick={async () => await updateDate(todos, todo.id)}
 							class="cursor-pointer text-red-600"
 						/> */}
-					</li>
-				))}
+							</li>
+						);
+					}
+				})}
 			</ul>
 		</div>
 	);

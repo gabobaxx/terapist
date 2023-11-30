@@ -57,7 +57,7 @@ interface ClientPatientsListProps {
 
 export default function ClientPatientsList(props: ClientPatientsListProps) {
 	const kids = useSignal(props.kids);
-	const isMoreKids = kids.value.length <= 10;
+	const isMoreKids = kids.value.length <= 0;
 	const kidAgeRef = useRef<HTMLInputElement | null>(null);
 	const kidNameRef = useRef<HTMLInputElement | null>(null);
 	const kidLastnameRef = useRef<HTMLInputElement | null>(null);
