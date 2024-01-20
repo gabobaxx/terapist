@@ -50,11 +50,6 @@ export default function LoginPage(props: PageProps) {
 					)}
 
 					<AuthForm type="Login" />
-					<hr class="my-4" />
-
-					<div class="text-center text-gray-500 hover:text-black mt-8">
-						<a href="/signup">¿No tienes una cuenta? Crear una</a>
-					</div>
 				</div>
 			</div>
 		</>
